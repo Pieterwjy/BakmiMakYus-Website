@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('product_name');
             $table->float('product_price');
-            $table->string('product_photo')->nullable();
+            $table->string('images')->nullable();
             $table->string('product_description');
+            $table->string('product_category');
             $table->string('product_status')->default('active');
             $table->timestamps();
         });

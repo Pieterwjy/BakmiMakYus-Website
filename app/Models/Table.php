@@ -11,7 +11,7 @@ class Table extends Model
 
     protected $table = 'tables';
 
-    protected $primaryKey = 'table_id';
+    protected $primaryKey = 'id';
 
     protected $fillable = ['table_number','table_capacity','table_qr'];
 }

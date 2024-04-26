@@ -19,8 +19,9 @@ class ProductFactory extends Factory
         return [
             'product_name' => 'ABC',
             'product_price' => $this->faker->randomDigit(),
-            'product_photo' =>'',
+            'images' =>'',
             'product_description' => 'Random product description',
+            'product_category' => 'Makanan',
             'product_status' => 'active'
         ];
     }

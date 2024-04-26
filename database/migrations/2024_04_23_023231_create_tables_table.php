@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('table_number')->unsigned();
             $table->integer('table_capacity')->unsigned();
-            $table->string('table_qr');
+            $table->string('table_qr')->nullable();
             $table->timestamps();
         });
     }

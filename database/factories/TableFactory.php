@@ -19,7 +19,7 @@ class TableFactory extends Factory
     {
         $table_number = $this->faker->randomNumber();
         $qrCodePath = 'qr_codes/table_' . $table_number . '.png';
-        QrCode::format('png')->size(200)->generate('Table ' . $table_number, public_path($qrCodePath));
+        QrCode::format('png')->size(200)->generate(route('table.scan', $table_number), public_path($qrCodePath));
         return [
             'table_number' => $table_number,
             'table_capacity'=> $this->faker->randomDigit(),

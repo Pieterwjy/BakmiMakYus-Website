@@ -22,9 +22,29 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 return redirect(RouteServiceProvider::HOME);
+
+                // if (Auth::user()->role === 'owner') {
+                //     return redirect()->route('owner.dashboard');
+                // } elseif (Auth::user()->role === 'admin') {
+                //     return redirect()->route('admin.dashboard');
+                // } elseif (Auth::user()->role === 'cook') {
+                //     return redirect()->route('cook.dashboard');
+                // }
+                    // Admin Owner Cook
             }
         }
 
+        // if (Auth::check()) {
+        //     // Check the user's role and redirect accordingly
+        //             if (Auth::user()->role === 'owner') {
+        //                 return redirect()->route('pendeta.dashboard');
+        //             } elseif (Auth::user()->role === 'admin') {
+        //                 return redirect()->route('admin.dashboard');
+        //             } elseif (Auth::user()->role === 'cook') {
+        //                 return redirect()->route('cook.dashboard');
+        //             }
+        //         }
+        // Admin Owner Cook
         return $next($request);
     }
 }
