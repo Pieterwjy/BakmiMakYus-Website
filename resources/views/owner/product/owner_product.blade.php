@@ -14,7 +14,7 @@
         {{ session('success') }}
     </div>
 @endif
-    <table class="table table-hover">
+    <table class="table table-hover" style="margin-bottom: 100px;"">
         <thead class="thead-light">
             <tr>
                 
@@ -36,11 +36,15 @@
                         <td class="align-middle">{{ $rs->product_name }}</td>
                         {{-- <td class="align-middle">{{ asset($rs->images) }}</td> --}}
                         {{-- <td class="align-middle">{{ Storage::url($rs->images) }}</td> --}}
-                        <td class="align-middle"><img src="{{ Storage::url($rs->images) }}" alt="Menu Image" width="75" height="75"></td>
-                        <td class="align-middle">{{ $rs->product_price }}</td>
+                        <td class="align-middle">
+                            @if($rs->images)
+                                <img src="{{ Storage::url($rs->images) }}" alt="Menu Image" width="75" height="75">
+                            @endif
+                        </td>
+                        <td class="align-middle">Rp.{{ $rs->product_price }}</td>
                         <td class="align-middle">{{ $rs->product_description }}</td>
                         <td class="align-middle">{{ $rs->product_category }}</td>
-                        <td class="align-middle">{{ $rs->product_status }}</td>
+                        <td class="align-middle">{{ $rs->product_status == 'active' ? 'Tersedia' : 'Tidak Tersedia'}}</td>
                         
                         <td class="align-middle">
                             <div class="btn-group" role="group" aria-label="Basic example">

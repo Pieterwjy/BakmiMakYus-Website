@@ -5,6 +5,8 @@ use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\OwnerAccountController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,9 +22,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 Route::get('/scan/{table}', [TableController::class, 'scan'])->name('table.scan');
+// Route::resource('/scan/{table}', OrderController::class)->names('order');
+Route::post('/scan/{table}/order', [OrderController::class, 'store'])->name('order.store');
+Route::get('/checkout/{orderId}', [OrderController::class, 'checkout'])->name('order.checkout');
+Route::post('/update-order-status', [OrderController::class, 'updateOrderStatus'])->name('update.order.status');
+Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

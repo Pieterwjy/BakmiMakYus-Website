@@ -26,12 +26,11 @@ class ProductController extends Controller
     public function create()
     {
 
-        
-        return view('owner.product.buat_product')->with('title','Buat Menu');
-        //
-        // if($request->file('image')){
-        //     $validatedData['image'] = $request->file('image')->store('post-images');
-        // }
+       // Fetch categories from the Product table
+    $categories = Product::select('product_category')->distinct()->get();
+
+    // Pass the categories to the view
+    return view('owner.product.buat_product', ['categories' => $categories, 'title' => 'Buat Menu']);
     }
 
     /**

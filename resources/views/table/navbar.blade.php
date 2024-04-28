@@ -1,6 +1,6 @@
 <nav class="navbar sticky-top navbar-expand-lg bg-light py-3">
   <div class="container-fluid">
-      <a class="navbar-brand" href="{{ route('owner.dashboard') }}">
+      <a class="navbar-brand" href="{{ route('home') }}">
           <img src="{{ asset('logo/logo.png') }}" width="60" height="60" alt="Logo">Bakmi MakYus - Pemesanan
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

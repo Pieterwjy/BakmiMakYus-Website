@@ -56,7 +56,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td class="text-center" colspan="5">Akun Tidak Ditemukan</td>
+                    <td class="text-center" colspan="5">Meja Tidak Ditemukan</td>
                 </tr>
             @endif
         </tbody>

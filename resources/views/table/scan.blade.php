@@ -37,23 +37,28 @@
             </div>
             <div class="modal-body" id="cartItems">
                 <!-- Cart items will be displayed here -->
+                <form action="{{ route('order.store', ['table' => $table->table_number]) }} " method="POST">
+                    @csrf
+                <input type="hidden" name="cart" id="cartData">
                <b>Nomor Meja : {{$table->table_number}}</b> 
-               
+               <input type="hidden" id="table_number" name="table_number" value="{{$table->table_number}}">
                 <div id="cart"></div>
                 <b><div id="grandTotalLabel" style="text-align: right;"></div>
+                    <input type="hidden" id="gross_amount" name="gross_amount">
                 <div style="text-align: right;">
-                    <input type="radio" id="dine-in" name="order-type" value="dine-in" checked>
+                    <input type="radio" id="dine-in" name="order_type" value="Dine-In" checked>
                     <label for="dine-in">Dine-In</label>
          
-                    <input type="radio" id="takeaway" name="order-type" value="takeaway">
+                    <input type="radio" id="takeaway" name="order_type" value="Takeaway">
                     <label for="takeaway">Takeaway</label>
                     </div></b>
-                <textarea class="form-control" id="additionalNotes" name="additionalNotes" rows="2" placeholder="Catatan Khusus"></textarea>
+                <textarea class="form-control" id="notes" name="notes" rows="2" placeholder="Catatan Khusus"></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Checkout</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="submit" class="btn btn-primary" id="checkoutBtn" disabled>Buat Pesanan</button>
             </div>
+        </form>
         </div>
     </div>
 </div>
@@ -74,25 +79,27 @@
   </script>
 
 <div class="container-fluid">
-    
     <div class="row">
         <div class="col-md-3 mb-4">
-            
             <div class="custom-nav">
-                <a class="nav-item active" href="#foods">Makanan</a>
-                <a class="nav-item" href="#drinks">Minuman</a>
-                <button id="view-cart-btn" class="btn btn-primary btn-block">View Cart</button>
+                @foreach($menu->unique('product_category') as $category)
+                <a class="nav-item{{ $loop->first ? ' active' : '' }}" href="#{{ strtolower($category->product_category) }}">{{ $category->product_category }}</a>
+                @endforeach
+                <center><button id="view-cart-btn" class="btn btn-primary btn-block">Lihat Keranjang</button></center>
             </div>
         </div>
         
         <div class="col-md-9">
-            <div id="foods" class="tab-content">
+            @foreach($menu->unique('product_category') as $category)
+            <div id="{{ strtolower($category->product_category) }}" class="tab-content{{ $loop->first ? ' active' : '' }}">
                 <div class="row">
                     @foreach($menu as $item)
-                    @if($item->product_category === 'Makanan' && $item->product_status ==="active")
+                    @if($item->product_category === $category->product_category && $item->product_status ==="active")
                     <div class="col-md-4 mb-4">
                         <div class="card h-100">
-                            <img src="{{ Storage::url($item->images) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="...">
+                            @if($item->images)
+                                <img src="{{ Storage::url($item->images) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="...">
+                            @endif
                             <div class="card-body">
                                 <h5 class="card-title">{{ $item->product_name }}</h5>
                                 <p class="card-text">{{ $item->product_description }}</p>
@@ -107,27 +114,7 @@
                     @endforeach
                 </div>
             </div>
-            <div id="drinks" class="tab-content" style="display: none;">
-                <div class="row">
-                    @foreach($menu as $item)
-                    @if($item->product_category === 'Minuman' && $item->product_status ==="active")
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <img src="{{ Storage::url($item->images) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $item->product_name }}</h5>
-                                <p class="card-text">{{ $item->product_description }}</p>
-                            </div>
-                            <div class="card-footer d-flex justify-content-between align-items-center">
-                                <p class="mb-0">Harga: Rp.{{ $item->product_price }}</p>
-                                <button class="btn btn-primary btn-sm" onclick="addToCart('{{ $item->id }}', '{{ $item->product_name }}', '{{ $item->product_price }}')">Tambah Ke Keranjang</button>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-                    @endforeach
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </div>
@@ -211,6 +198,39 @@ input[type="number"] {
         border-radius: 5px;
     }
 </style>
+
+
+
+{{-- <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{env('MIDTRANS_CLIENT_KEY')}}"></script>
+    <script type="text/javascript">
+      // Function to handle payment initiation when the checkout button is clicked
+      document.getElementById('checkout-form').addEventListener('submit', function(event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Execute payment initiation logic using Snap
+        snap.pay('<?=$snapToken?>', {
+          // Optional: Callback functions for different payment outcomes
+          onSuccess: function(result) {
+            // Handle successful payment
+            // You may redirect the user to a success page or display a success message
+            // Example: window.location.href = "<Your success page URL>";
+          },
+          onPending: function(result) {
+            // Handle pending payment
+            // This callback is triggered when the payment is pending or waiting for approval
+            // Example: display a message to the user indicating that the payment is pending
+          },
+          onError: function(result) {
+            // Handle payment error
+            // This callback is triggered when an error occurs during payment processing
+            // Example: display an error message to the user
+          }
+        });
+      });
+    </script> --}}
+
+
 
 <script>
 
@@ -303,6 +323,7 @@ input[type="number"] {
 
     // Update cart view
     displayCart();
+    toggleCheckoutButton();
 
     // Optionally, you can provide feedback to the user
     const alertMsg = 'Menu Di Tambah Kedalam Keranjang!';
@@ -326,6 +347,7 @@ input[type="number"] {
         }
         localStorage.setItem('cart', JSON.stringify(cart));
         displayCart();
+        toggleCheckoutButton();
     }
     function displayCart() {
     // Get cart data from local storage
@@ -381,17 +403,42 @@ input[type="number"] {
     let grandTotalContainer = document.getElementById('grandTotalLabel');
     grandTotalContainer.textContent = 'Grand Total: Rp.' + grandTotal.toFixed(2); // Display grand total with two decimal places
 
+    document.getElementById("gross_amount").value = grandTotal;
     cartContainer.appendChild(table);
 }
+
+
+    function updateCartDataBeforeSubmit() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        document.getElementById('cartData').value = JSON.stringify(cart);
+    }
+
+
+        function toggleCheckoutButton() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let checkoutBtn = document.getElementById('checkoutBtn');
+        if (cart.length === 0) {
+            checkoutBtn.disabled = true;
+        } else {
+            checkoutBtn.disabled = false;
+        }
+    }
 
     // Call the displayCart function when the page loads
      window.addEventListener('DOMContentLoaded', function() {
         // let tableNumber = getTableNumberFromURL();
         // addTableNumberToCart(tableNumber);
-
+        toggleCheckoutButton()
         // Display the cart after adding the table number
         displayCart();
     });
+
+    document.querySelector('form').addEventListener('submit', function() {
+     // Update cart data before form submission
+        updateCartDataBeforeSubmit();
+    // Clear the 'cart' key from local storage after submitting the order
+    // localStorage.removeItem('cart');
+});
 
 
 </script>

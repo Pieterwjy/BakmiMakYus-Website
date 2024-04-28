@@ -13,9 +13,10 @@ use Illuminate\Support\Facades\File;
 class TableController extends Controller
 {
 
-    public function scan($tableId)
+    public function scan($tableNumber)
     {
-        $table = Table::find($tableId);
+        $table = Table::where('table_number', $tableNumber)->first();
+        // $table = Table::find($tableNumber);
     
         if (! $table) {
             // Redirect back with an error message if the table is not found
@@ -41,7 +42,13 @@ class TableController extends Controller
      */
     public function create()
     {
-        return view('owner.table.buat_meja')->with('title','Buat Meja');
+        // Retrieve the maximum table number
+    $lastTableNumber = Table::max('table_number');
+
+    // Increment the last table number by 1 to get the next available table number
+    $nextTableNumber = $lastTableNumber + 1;
+
+        return view('owner.table.buat_meja',compact('nextTableNumber'))->with('title','Buat Meja');
     }
 
     /**
@@ -54,7 +61,7 @@ class TableController extends Controller
 
         $request->merge(['table_qr' => $qrCodePath]);
         $validatedData = $request->validate([
-            'table_number' => 'required|max:255',
+            'table_number' => 'required|unique:tables',
             'table_capacity' => 'required',
             'table_qr' => 'required'
         ]);

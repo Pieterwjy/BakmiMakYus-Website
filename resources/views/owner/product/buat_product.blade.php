@@ -25,17 +25,30 @@
     </div>
     <div class="mb-3">
         <label for="title" class="form-label">Harga Produk</label>
-        <input type="text" class="form-control" id="product_price" name="product_price" required>
+        <input type="number" class="form-control" id="product_price" name="product_price" min="0" required>
       </div>
       <div class="mb-3">
         <label for="title" class="form-label">Deskripsi Produk</label>
         <input type="text" class="form-control" id="product_description" name="product_description" required>
       </div>
       <div class="mb-3">
-        <label for="title" class="form-label">Kategori Produk</label>
-        <input type="text" class="form-control" id="product_category" name="product_category" required>
+        <label for="product_category" class="form-label">Kategori Produk</label>
+        {{-- {{dd($categories->product_category);}} --}}
+    <select class="form-select" id="product_category" name="product_category" required>
+      {{-- @foreach($categories as $category)
+      <option value="{{ $category->product_category }}">{{ $category->product_category }}</option>
+      @endforeach --}}
+      <option value="Makanan">Bakmi</option>
+      <option value="Minuman">Nasi</option>
+      <option value="DimSum">Dimsum</option>
+      <option value="Tambahan">Tambahan</option>
+      <option value="Minuman">Minuman</option>
+      <option value="Frozen">Frozen</option>
+      <option value="Lain-Lain">Lain-Lain</option>
+    </select>
       </div>
-    
+      <input type="text" class="form-control" id="custom_category_input" name="custom_category" style="display: none;" placeholder="Masukkan Kategori Baru">
+
     <button type="submit" class="btn btn-primary">Buat Produk</button>
   </form>
 
@@ -54,6 +67,7 @@
     }
 
 </script>
+
 
 @endsection
 {{-- 'table_number','table_capacity','table_qr' --}}
