@@ -1,66 +1,45 @@
-{{-- @extends('table.main')
-
-@section('container')
-<div class="row">
-    @foreach($menu as $item)
-    <div class="col-md-3 mb-4">
-        <div class="card h-100">
-            <img src="{{ Storage::url($item->images) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">{{ $item->product_name }}</h5>
-                <p class="card-text">{{ $item->product_description }}</p>
-            </div>
-            <div class="card-footer d-flex justify-content-between align-items-center">
-                <p class="mb-0">Price: Rp.{{ $item->product_price }}</p>
-                <button class="btn btn-primary btn-sm">Tambah ke Keranjang</button>
-            </div>
-        </div>
-    </div>
-    @endforeach
-</div>
-@endsection --}}
-
-
-@extends('table.main')
-
+@extends('admin.main')
 @section('container')
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"  />
 
-
+<!-- Cart modal -->
 <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Added modal-lg class for large modal -->
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="cartModalLabel">Keranjang</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="cartItems">
-                <!-- Cart items will be displayed here -->
-                <form action="{{ route('order.store', ['table' => $table->table_number]) }} " method="POST">
+                <form action="{{ route('admin.order.store') }}" method="POST">
                     @csrf
-                <input type="hidden" name="cart" id="cartData">
-               <b>Nomor Meja : {{$table->table_number}}</b> 
-               <input type="hidden" id="table_number" name="table_number" value="{{$table->table_number}}">
-                <div id="cart"></div>
-                <b><div id="grandTotalLabel" style="text-align: right;"></div>
+                    <input type="hidden" name="cart" id="cartData">
+                    <label for="table_number">Nomor Meja</label>
+                    <select id="table_number" class="form-select" aria-label="Pilih nomor meja" name="table_number">
+                        @foreach($table as $tables)
+                            <option value="{{ $tables->table_number }}">{{ $tables->table_number }}</option>
+                        @endforeach
+                    </select>
+                    <!-- Hidden input for table number -->
+                    <div id="cart"></div>
+                    <div id="grandTotalLabel" style="text-align: right;"></div>
                     <input type="hidden" id="gross_amount" name="gross_amount">
-                <div style="text-align: right;">
-                    <input type="radio" id="dine-in" name="order_type" value="Dine-In" checked>
-                    <label for="dine-in">Dine-In</label>
-         
-                    <input type="radio" id="takeaway" name="order_type" value="Takeaway">
-                    <label for="takeaway">Takeaway</label>
+                    <div style="text-align: right;">
+                        <input type="radio" id="dine-in" name="order_type" value="Dine-In" checked>
+                        <label for="dine-in">Dine-In</label>
+                        <input type="radio" id="takeaway" name="order_type" value="Takeaway">
+                        <label for="takeaway">Takeaway</label>
                     </div>
                     <div style="text-align: right;">
                         <input type="radio" id="cash" name="payment_type" value="Cash" checked>
                         <label for="cash">Tunai</label>
-             
                         <input type="radio" id="cashless" name="payment_type" value="Cashless">
                         <label for="cashless">Non Tunai</label>
-                        </div></b>
-                <textarea class="form-control" id="notes" name="notes" rows="2" placeholder="Catatan Khusus"></textarea>
+                    </div>
+                    <textarea class="form-control" id="notes" name="notes" rows="2" placeholder="Catatan Khusus"></textarea>
+                
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -83,6 +62,9 @@
         // Optionally, you can load cart items dynamically here using AJAX
         // and update the cart content inside the modal
       });
+
+
+
     });
   </script>
 
@@ -91,7 +73,7 @@
         <div class="col-md-3 mb-4">
             <div class="custom-nav">
                 @foreach($menu->unique('product_category') as $category)
-                <a class="nav-item{{ $loop->first ? '' : '' }}" href="#{{ strtolower($category->product_category) }}">{{ $category->product_category }}</a>
+                <a class="custom-nav-item{{ $loop->first ? '' : '' }}" href="#{{ strtolower($category->product_category) }}">{{ $category->product_category }}</a>
                 {{-- <a class="nav-item{{ $loop->first ? ' active' : '' }}" href="#{{ strtolower($category->product_category) }}">{{ $category->product_category }}</a> --}}
                 @endforeach
                 <center><button id="view-cart-btn" class="btn btn-primary btn-block"><i class="fas fa-shopping-cart"></i> Lihat Keranjang</button></center>
@@ -151,7 +133,7 @@ input[type="number"] {
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     }
 
-    .nav-item {
+    .custom-nav-item {
         display: block;
         padding: 10px;
         margin-bottom: 10px;
@@ -163,11 +145,11 @@ input[type="number"] {
         text-align: center;
     }
 
-    .nav-item:hover {
+    .custom-nav-item:hover {
         background-color: #e9ecef;
     }
 
-    .nav-item.active {
+    .custom-nav-item.active {
         background-color: #007bff;
         color: #fff;
     }
@@ -245,34 +227,34 @@ input[type="number"] {
 
 
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const navItems = document.querySelectorAll('.nav-item');
-        const tabContents = document.querySelectorAll('.tab-content');
+document.addEventListener('DOMContentLoaded', function () {
+    const navItems = document.querySelectorAll('.custom-nav-item');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-        // Add event listener to nav items
-        navItems.forEach(item => {
-            item.addEventListener('click', function (event) {
-                event.preventDefault();
+    // Add event listener to nav items
+    navItems.forEach(item => {
+        item.addEventListener('click', function (event) {
+            event.preventDefault();
 
-                // Remove 'active' class from all nav items
-                navItems.forEach(item => {
-                    item.classList.remove('active');
-                });
-
-                // Hide all tab contents
-                tabContents.forEach(content => {
-                    content.style.display = 'none';
-                });
-
-                // Add 'active' class to clicked nav item
-                this.classList.add('active');
-
-                // Show corresponding tab content
-                const targetId = this.getAttribute('href').replace('#', '');
-                document.getElementById(targetId).style.display = 'block';
+            // Remove 'active' class from all nav items
+            navItems.forEach(item => {
+                item.classList.remove('active');
             });
+
+            // Hide all tab contents
+            tabContents.forEach(content => {
+                content.style.display = 'none';
+            });
+
+            // Add 'active' class to clicked nav item
+            this.classList.add('active');
+
+            // Show corresponding tab content
+            const targetId = this.getAttribute('href').replace('#', '');
+            document.getElementById(targetId).style.display = 'block';
         });
     });
+});
 
 
     function getTableNumberFromURL() {
@@ -451,4 +433,6 @@ input[type="number"] {
 
 
 </script>
+
+
 @endsection

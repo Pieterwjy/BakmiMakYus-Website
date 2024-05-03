@@ -1,4 +1,4 @@
-@extends('table.main')
+@extends('admin.main')
 
 @section('container')
 <div class="container checkout-container">
@@ -33,10 +33,14 @@
 
         <p class="total-amount text-end"><b>Grand Total: Rp. {{ $order->gross_amount }}</b></p>
     </div>
-
     <!-- Display payment button here -->
     @if($order->status == "Pending, Payment in Cashier")
-   <h3><center>Belum Lunas, Menunggu Pembayaran Di Kasir</center></h3>
+   <h3><center>Belum Lunas, Pastikan Nominal Pembayaran Sesuai.</center></h3>
+   <form action="{{ route('admin.order.payandredirect', ['id' => $order->id]) }}" method="POST" >
+    @method('PUT')
+    @csrf
+    <center> <button class="btn btn-warning" type="submit" class="btn btn-danger p-0" onsubmit="return confirm('Pastikan Nominal Pembayaran Sesuai.')" id="payByCashButton">Terima Pembayaran</button></center>
+    </form>
     @elseif($order->status == "Settlement")
     <h3><center>Lunas</center></h3>
     @elseif($order->status == "Paid By Cash")
@@ -53,6 +57,30 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const payByCashButton = document.getElementById('payByCashButton');
+
+        if (payByCashButton) {
+            payByCashButton.addEventListener('click', function () {
+                
+                updateOrderStatus();
+                localStorage.removeItem('cart');
+
+                var baseUrl = window.location.origin;
+                var successUrl = baseUrl + '/admin/payment/success';
+
+                successUrl += '?order_id=' + orderId;
+                successUrl += '&transaction_status=' + response.status;
+                
+                // Redirect to payment_success.blade.php
+                window.location.href = successUrl;
+            });
+        }
+    });
+</script>
+
 <script>
     // Function to check payment status periodically
     function checkPaymentStatus(orderId) {
@@ -62,10 +90,12 @@
             type: 'GET',
             success: function(response) {
                 console.log(response.status);
-                if (response.status === 'Paid By Cash' || response.status === 'Settlement') {
+                console.log(response.status === 'Paid by Cash' || response.status === 'Settlement');
+                if (response.status === 'Paid by Cash' || response.status === 'Settlement') {
                    // Construct the correct URL dynamically
+                   console.log(response.status);
                 var baseUrl = window.location.origin;
-                var successUrl = baseUrl + '/payment/success';
+                var successUrl = baseUrl + '/admin/payment/success';
 
                 successUrl += '?order_id=' + orderId;
                 successUrl += '&transaction_status=' + response.status;
@@ -105,8 +135,11 @@
                 // Handle successful payment
                 // You may redirect the user to a success page or display a success message
                 // Example: window.location.href = "<Your success page URL>";
+                    // localStorage.removeItem('cart');
+                    // // updateOrderStatus();
+                    // window.location.href = "{{ route('payment.success') }}";
                     var baseUrl = window.location.origin;
-                var successUrl = baseUrl + '/payment/success';
+                var successUrl = baseUrl + '/admin/payment/success';
 
                 successUrl += '?order_id=' + orderId;
                 successUrl += '&transaction_status=' + response.status;

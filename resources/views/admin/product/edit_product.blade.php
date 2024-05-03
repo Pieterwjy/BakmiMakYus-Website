@@ -1,4 +1,4 @@
-@extends('owner.main')
+@extends('admin.main')
 @section('container')
 <div class="container mb-5"> <!-- Add margin-bottom -->
     <h1 class="mb-0">Ubah Menu</h1>
@@ -13,12 +13,12 @@
     @endif
     {{-- 'product_name','product_price','product_photo',
         'product_description','product_category','product_status' --}}
-    <form action="{{ route('owner.product.update',$product->id) }}" method="POST" enctype="multipart/form-data" style="margin-bottom: 100px;">
+    <form action="{{ route('admin.product.update',$product->id) }}" method="POST" enctype="multipart/form-data" style="margin-bottom: 100px;">
         @csrf
         @method('PUT')
         <div class="mb-3">
             <label for="title" class="form-label">Nama Produk</label>
-            <input type="text" class="form-control" id="product_name" name="product_name" value="{{ $product->product_name}}" required>
+            <input type="text" class="form-control" id="product_name" name="product_name" value="{{ $product->product_name}}" required disabled>
         </div>
         <div class="mb-3">
             <label for="image" class="form-label">Unggah Gambar</label>
@@ -32,19 +32,19 @@
             @endif
 
             
-            <input type="file" class="form-control" id="images" name="images" onchange="previewImage()">
+            <input type="file" class="form-control" id="images" name="images" onchange="previewImage()" disabled>
         </div>
         <div class="mb-3">
             <label for="title" class="form-label">Harga Produk</label>
-            <input type="text" class="form-control" id="product_price" name="product_price" value="{{ $product->product_price}}"required>
+            <input type="text" class="form-control" id="product_price" name="product_price" value="{{ $product->product_price}}"required disabled>
         </div>
         <div class="mb-3">
             <label for="title" class="form-label">Deskripsi Produk</label>
-            <input type="text" class="form-control" id="product_description" name="product_description" value="{{ $product->product_description}}"required>
+            <input type="text" class="form-control" id="product_description" name="product_description" value="{{ $product->product_description}}"required disabled> 
         </div>
         <div class="mb-3">
             <label for="title" class="form-label">Kategori Produk</label>
-            <select class="form-select" id="product_category" name="product_category" required>
+            <select class="form-select" id="product_category" name="product_category" required disabled>
                 <option value="Bakmi" {{ $product->product_category === 'Bakmi' ? 'selected' : '' }}>Bakmi</option>
                 <option value="Nasi" {{ $product->product_category === 'Nasi' ? 'selected' : '' }}>Nasi</option>
                 <option value="DimSum" {{ $product->product_category === 'DimSum' ? 'selected' : '' }}>Dimsum</option>

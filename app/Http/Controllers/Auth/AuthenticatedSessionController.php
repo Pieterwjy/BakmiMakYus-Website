@@ -40,9 +40,10 @@ class AuthenticatedSessionController extends Controller
         return redirect()->intended(route('admin.dashboard'));
     } elseif (Auth::user()->role === 'cook') {
         return redirect()->intended(route('cook.dashboard'));
-    } else {
-        return redirect()->intended(RouteServiceProvider::HOME);
-    }
+    } 
+    // else {
+    //     return redirect()->intended(RouteServiceProvider::HOME);
+    // }
     }
 
     /**

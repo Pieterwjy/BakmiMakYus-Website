@@ -1,8 +1,8 @@
-@extends('owner.main')
+@extends('admin.main')
 @section('container')
 <div class="d-flex align-items-center justify-content-between">
     <h1 class="mb-0">Daftar Menu</h1>
-    <a href="{{ route('owner.product.create') }}" class="btn btn-primary">Tambah Menu</a>
+    {{-- <a href="{{ route('admin.product.create') }}" class="btn btn-primary">Tambah Menu</a> --}}
 </div>
 @if ($errors->has('error'))
     <div class="alert alert-danger">
@@ -48,14 +48,14 @@
                         
                         <td class="align-middle">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="{{ route('owner.product.edit', $rs->id)}}" type="button" class="btn btn-warning">Edit</a>
+                                <a href="{{ route('admin.product.edit', $rs->id)}}" type="button" class="btn btn-warning">Edit</a>
                                 
-                                <form action="{{ route('owner.product.destroy', $rs->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Delete?')">
+                                {{-- <form action="{{ route('owner.product.destroy', $rs->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Delete?')">
                                     @method('DELETE')
                                     @csrf
                                     <button class="btn btn-danger m-0">Delete</button>
         
-                                </form>
+                                </form> --}}
 
                                 
                             </div>

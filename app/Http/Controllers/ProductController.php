@@ -88,6 +88,7 @@ class ProductController extends Controller
             'product_price' => 'required',
             'product_description' => 'required',
             'product_category' => 'required',
+            'product_status' => 'required',
             'images' => 'mimes:jpeg,png'
         ]);
 

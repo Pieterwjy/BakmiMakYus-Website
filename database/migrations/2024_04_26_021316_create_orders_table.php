@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('order_type');
             $table->string('notes')->nullable();
             $table->string('author')->nullable();
-            $table->float('gross_amount');
-            $table->string('status')->nullable();
+            $table->float('gross_amount',12,2);
+            $table->string('order_status')->nullable();
             $table->string('snap_token')->nullable();
             $table->timestamps();
         });
