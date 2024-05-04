@@ -17,15 +17,14 @@
     <table class="table table-hover" style="margin-bottom: 100px;">
         <thead class="thead-light">
             <tr>
-                
                 <th>No</th>
-                <th>Nama Produk</th>
-                <th>Gambar Produk</th>
-                <th>Harga Produk</th>
-                <th>Deskripsi Produk</th>
-                <th>Kategori Produk</th>
-                <th>Status Produk</th>
-                <th>Action</th>
+                <th>Nama</th>
+                <th>Gambar</th>
+                <th>Harga</th>
+                <th>Deskripsi</th>
+                <th>Kategori</th>
+                <th>Status</th>
+                <th>Pilihan</th>
             </tr>
         </thead>
         <tbody>
@@ -41,14 +40,14 @@
                                 <img src="{{ Storage::url($rs->images) }}" alt="Menu Image" width="75" height="75">
                             @endif
                         </td>
-                        <td class="align-middle">Rp.{{ $rs->product_price }}</td>
+                        <td class="align-middle">Rp.{{ number_format($rs->product_price, 0, ',', '.') }}</td>
                         <td class="align-middle">{{ $rs->product_description }}</td>
                         <td class="align-middle">{{ $rs->product_category }}</td>
                         <td class="align-middle">{{ $rs->product_status == 'active' ? 'Tersedia' : 'Tidak Tersedia'}}</td>
                         
                         <td class="align-middle">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="{{ route('admin.product.edit', $rs->id)}}" type="button" class="btn btn-warning">Edit</a>
+                                <a href="{{ route('admin.product.edit', $rs->id)}}" type="button" class="btn btn-warning">Ubah Ketersediaan</a>
                                 
                                 {{-- <form action="{{ route('owner.product.destroy', $rs->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Delete?')">
                                     @method('DELETE')

@@ -10,8 +10,6 @@ class Table extends Model
     use HasFactory;
 
     protected $table = 'tables';
-
     protected $primaryKey = 'id';
-
     protected $fillable = ['table_number','table_capacity','table_qr'];
 }

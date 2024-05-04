@@ -15,7 +15,7 @@
         @csrf
         @method('PUT')
         <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Name</span>
+            <span class="input-group-text" id="basic-addon1">Nama</span>
             <input type="text" name="name"  class="form-control" placeholder="Nama" aria-label="Name" aria-describedby="basic-addon1" value="{{ $account->name}}" required>
         </div>
         <div class="input-group mb-3">
@@ -23,7 +23,7 @@
             <input type="email" name="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" value="{{ $account->email}}" required>
         </div>
         <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Phone</span>
+            <span class="input-group-text" id="basic-addon1">No. Telp</span>
             <input type="tel" name="phone" class="form-control" placeholder="Phone" aria-label="Phone" aria-describedby="basic-addon1"value="{{ $account->phone}}" required>
         </div>
             <div class="input-group mb-3">
@@ -56,7 +56,7 @@
             </div>
             <div class="row">
                 <div class="d-grid">
-                    <button class="btn btn-primary">Update</button>
+                    <button class="btn btn-primary">Ubah</button>
                 </div>
             </div>
         </div>
@@ -64,14 +64,14 @@
     @if(auth()->user()->id == $account->id)
     <br>
     <div class="container">
-    <h1 class="mb-0">Ubah Password</h1>
+    <h1 class="mb-0">Ubah Kata Sandi</h1>
     <hr />
     <form method="post" action="{{ route('password.update') }}">
         @csrf
         @method('put')
         <div class="row">
         <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupRole">Password Saat Ini</label>
+            <label class="input-group-text" for="inputGroupRole">Kata Sandi Saat Ini</label>
             {{-- <label for="current_password" class="form-label">{{ __('Current Password') }}</label> --}}
             <input id="current_password" name="current_password" type="password" class="form-control" autocomplete="current-password"/>
         </div>
@@ -81,7 +81,7 @@
             </div>
         <div class="row">
         <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupRole">Password Baru</label>
+            <label class="input-group-text" for="inputGroupRole">Kata Sandi Baru</label>
             {{-- <label for="password" class="form-label">{{ __('New Password') }}</label> --}}
             <input id="password" name="password" type="password" class="form-control" autocomplete="new-password" />
             
@@ -93,7 +93,7 @@
         </div>
         <div class="row">
         <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupRole">Konfirmasi Password Baru</label>
+            <label class="input-group-text" for="inputGroupRole">Konfirmasi Kata Sandi Baru</label>
             {{-- <label for="password_confirmation" class="form-label">{{ __('Confirm Password') }}</label> --}}
             <input id="password_confirmation" name="password_confirmation" type="password" class="form-control" autocomplete="new-password" />            
         </div>
@@ -103,7 +103,7 @@
         </div>
         <div class="row">
             <div class="d-grid">
-            <button class="btn btn-primary">Ganti Password</button>
+            <button class="btn btn-primary">Ganti Kata Sandi</button>
             
             @if (session('status') === 'password-updated')
                 <p
@@ -112,7 +112,7 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600"
-                >{{ __('Password Berhasil Dirubah.') }}</p>
+                >{{ __('Kata Sandi Berhasil Dirubah.') }}</p>
             @endif
             </div>
         </div>

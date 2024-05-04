@@ -26,7 +26,7 @@ class ProductController extends Controller
     public function create()
     {
 
-       // Fetch categories from the Product table
+    // Fetch categories from the Product table
     $categories = Product::select('product_category')->distinct()->get();
 
     // Pass the categories to the view
@@ -38,9 +38,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
-    // //     'product_name','product_price','product_photo',
-    // // 'product_description','product_category','product_status'
         $validatedData = $request->validate([
             'product_name' => 'required|max:255',
             'product_price' => 'required',
@@ -52,12 +49,6 @@ class ProductController extends Controller
         if($request->file('images')){
             $validatedData['images'] = $request->file('images')->store('menu-images');
         }
-     
-    //     // $validatedData['excerpt'] = Str::limit(strip_tags($request->body),150);
-        
-    //     // Account::create($request->all());
- 
-    //     // return redirect()->route('admin.akun.index')->with('Berhasil', 'Akun berhasil dibuat');
         Product::create($validatedData);
         return redirect()->route('owner.product.index')->with('success', 'Menu berhasil dibuat');
     }
@@ -99,9 +90,7 @@ class ProductController extends Controller
             $validatedData['images'] = $request->file('images')->store('menu-images');
         }
 
-        // Post::where('id',$id)->update($request->only(['title','body']));
         Product::where('id',$id)->update($validatedData);
- 
         return redirect()->route('owner.product.index')->with('success', 'Menu berhasil diperbaharui');
     }
 
@@ -111,13 +100,10 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product = Product::findOrFail($product->id);
-        
         if ($product->images) {
             Storage::delete($product->images);
         }
         $product->delete();
- 
-        // return redirect()->route('product.index')->with('success', 'product deleted successfully');
         return redirect()->route('owner.product.index')->with('success', 'Menu berhasil dihapus');
     }
 }

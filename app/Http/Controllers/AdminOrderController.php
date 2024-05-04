@@ -14,9 +14,13 @@ class AdminOrderController extends Controller
      */
     public function index()
     {
-        // $orders = Order::all();
         $orders = Order::whereIn('status', ['settlement','Paid By Cash','Pending, Payment in Cashier'])->get();
         return view('admin.order.admin_order')->with('orders',$orders)->with('title','Menu Pesanan');
+    }
+    public function history()
+    {
+        $orders = Order::orderBy('created_at', 'desc')->get();
+        return view('admin.order.admin_order_history')->with('orders',$orders)->with('title','Histori Pesanan');
     }
 
     /**
@@ -25,13 +29,11 @@ class AdminOrderController extends Controller
     public function create()
     {
         $menu = Product::all();   
-        // $table = Table::where('table_number', $tableNumber)->first();
         $table = Table::all();
-        // $table = Table::find($tableNumber);
     
         if (! $table) {
             // Redirect back with an error message if the table is not found
-            return redirect()->back()->with('error', 'Table not found');
+            return redirect()->back()->with('error', 'Meja tidak ditemukan');
         }
         // return view('admin.order.admin_buat_order',compact(menu,table))->with('title','Buat Pesanan Admin');
         return view('admin.order.admin_buat_order')->with('title','Buat Pesanan Admin')->with('menu',$menu)->with('table',$table);
@@ -44,9 +46,6 @@ class AdminOrderController extends Controller
     {
       
         $cart = json_decode($request->cart, true);
-        
-
-
         $validatedData = $request->validate([
             'table_number' => 'required',
             'order_type' => 'required',
@@ -98,7 +97,7 @@ class AdminOrderController extends Controller
             // Get Snap token from Midtrans
             $snap_token = \Midtrans\Snap::getSnapToken($params);
             $order->snap_token = $snap_token;
-            $order->status = "Pending"; // Assuming you set the status to Pending for cashless payment as well
+            $order->status = "Pending";
             $order->save();
 
             return redirect()->route('admin.order.checkout', ['orderId' => $order->id]);
@@ -127,9 +126,15 @@ class AdminOrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function show(String $id)
     {
-        //
+        $order = Order::findOrFail($id);
+        $order_detail = OrderDetail::where('order_id', $id)->get();
+        $title = 'Admin || Lihat Detail Pesanan';
+        return view('admin.order.admin_lihat_order', [ 
+            'order' => $order,
+            'order_detail' =>$order_detail,
+            'title' => $title, ]);
     }
 
     /**
@@ -158,12 +163,11 @@ class AdminOrderController extends Controller
 
     public function complete($id)
     {
-
         // Find the order by ID
         $order = Order::findOrFail($id);
 
         // Update the order status
-        $order->order_status = 'Selesai'; // Or any other status you want to set
+        $order->order_status = 'Selesai';
         $order->save();
 
         // Return a response
@@ -172,12 +176,11 @@ class AdminOrderController extends Controller
 
     public function pay($id)
     {
-
         // Find the order by ID
         $order = Order::findOrFail($id);
 
         // Update the order status
-        $order->status = 'Paid By Cash'; // Or any other status you want to set
+        $order->status = 'Paid By Cash';
         $order->order_status = 'Diteruskan Ke Koki';
         $order->save();
 
@@ -187,12 +190,11 @@ class AdminOrderController extends Controller
 
     public function payAndRedirect($id)
     {
-
         // Find the order by ID
         $order = Order::findOrFail($id);
 
         // Update the order status
-        $order->status = 'Paid By Cash'; // Or any other status you want to set
+        $order->status = 'Paid By Cash';
         $order->order_status = 'Diteruskan Ke Koki';
         $order->save();
 
@@ -205,21 +207,9 @@ class AdminOrderController extends Controller
 
     public function fetch()
     {
-
-        // Fetch updated data from the database
-        //     $orders = Order::whereIn('status', ['Settlement', 'Paid By Cash', 'Pending, Payment in Cashier'])
-        // ->where('order_status', '!=', 'Selesai')
-        // ->get();
-        // dd($orders);
-
-        // $orders = Order::whereIn('status', ['Settlement', 'Paid By Cash', 'Pending, Payment in Cashier'])
-        // ->where('order_status', '!=', 'Selesai')
-        // ->get();
         $orders = Order::whereIn('status', ['settlement','Paid By Cash','Pending, Payment in Cashier'])
         ->get();
-
         // Return the updated data as JSON response
-        // dd($orders);
         return response()->json($orders);
     }
 }

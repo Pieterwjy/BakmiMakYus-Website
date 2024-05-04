@@ -27,26 +27,18 @@ class OwnerTransactionController extends Controller
     
     $statuses = ['Settlement', 'Paid By Cash'];
     $order_statuses = ['Selesai'];
-    \Log::info("Start Date: $startDate, End Date: $endDate");
 
-    // \Log::info(Order::whereBetween('created_at', [$startDate, $endDate])
-    //     ->whereIn('status', $statuses)
-    //     ->whereIn('order_status', $order_statuses)
-    //     ->toSql());
+    \Log::info("Start Date: $startDate, End Date: $endDate");
     \Log::info(Order::whereDate('created_at', '>=', $startDate)
         ->whereDate('created_at', '<=', $endDate)
         ->whereIn('status', $statuses)
         ->whereIn('order_status', $order_statuses)->toSql());
-    // Filter orders by the date range and statuses
-    // $filteredOrders = Order::whereBetween('created_at', [$startDate, $endDate])
-    //     ->whereIn('status', $statuses)->whereIn('order_status', $order_statuses)
-    //     ->get();
+
     $filteredOrders = Order::whereDate('created_at', '>=', $startDate)
     ->whereDate('created_at', '<=', $endDate)
     ->whereIn('status', $statuses)
     ->whereIn('order_status', $order_statuses)
     ->get();
-
     
     // Calculate total revenue from filtered orders
     $totalRevenue = $filteredOrders->sum('gross_amount');
@@ -61,17 +53,13 @@ class OwnerTransactionController extends Controller
         ->get();
 
     // Retrieve orders and order details
-    // $orders = Order::with('details')
-    //     ->whereBetween('created_at', [$startDate, $endDate])
-    //     ->whereIn('status', $statuses)
-    //     ->get();
 
-        $orders = Order::with('details')
-    ->whereDate('created_at', '>=', $startDate)
-    ->whereDate('created_at', '<=', $endDate)
-    ->whereIn('status', $statuses)
-    ->whereIn('order_status', $order_statuses)
-    ->get();
+    $orders = Order::with('details')
+        ->whereDate('created_at', '>=', $startDate)
+        ->whereDate('created_at', '<=', $endDate)
+        ->whereIn('status', $statuses)
+        ->whereIn('order_status', $order_statuses)
+        ->get();
     // Prepare order trends data
     $orderData = [
         'labels' => [],

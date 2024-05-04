@@ -16,22 +16,22 @@
                     <th>Nama Produk</th>
                     <th>Harga</th>
                     <th>Qty.</th>
-                    <th>Subtotal</th>
+                    <th>Sub Total</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($order_detail as $orderDetail)
                 <tr>
                     <td>{{ $orderDetail->product_name }}</td>
-                    <td>Rp. {{ $orderDetail->product_price }}</td>
+                    <td>Rp.{{ number_format($orderDetail->product_price, 0, ',', '.') }}</td>
                     <td>{{ $orderDetail->order_qty }}</td>
-                    <td>Rp. {{ $orderDetail->product_price * $orderDetail->order_qty }}</td>
+                    <td>Rp.{{ number_format(($orderDetail->product_price * $orderDetail->order_qty), 0, ',', '.') }}</td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
 
-        <p class="total-amount text-end"><b>Grand Total: Rp. {{ $order->gross_amount }}</b></p>
+        <p class="total-amount text-end"><b>Total Harga: Rp.{{ number_format($order->gross_amount, 0, ',', '.') }}</b></p>
     </div>
 
     <!-- Display payment button here -->
@@ -41,6 +41,8 @@
     <h3><center>Lunas</center></h3>
     @elseif($order->status == "Paid By Cash")
     <h3><center>Lunas</center></h3>
+    @elseif($order->status == "Expired")
+    <h3><center>Pembayaran Kadaluarsa, Harap Pesan Kembali</center></h3>
     @else
     <div class="payment-button">
         <center><button id="payButton" class="btn btn-primary">Bayar Sekarang</button></center>

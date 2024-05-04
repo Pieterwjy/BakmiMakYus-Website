@@ -21,7 +21,7 @@
                 <th>No. Meja</th>
                 <th>Kapasitas</th>
                 <th>QR Meja</th>
-                <th>Action</th>
+                <th>Pilihan</th>
             </tr>
         </thead>
         <tbody>
@@ -30,7 +30,7 @@
                     <tr>
                         <td class="align-middle">{{ $loop->iteration }}</td>
                         <td class="align-middle">{{ $rs->table_number }}</td>
-                        <td class="align-middle">{{ $rs->table_capacity }}</td>
+                        <td class="align-middle">{{ $rs->table_capacity }} Orang</td>
                         {{-- <td class="align-middle">{{ $rs->table_qr }}</td> --}}
                         <td class="align-middle"><img src="{{ asset( $rs->table_qr) }}" alt="QR Code" width="75" height="75"></td>
                         <td class="align-middle">
@@ -39,7 +39,7 @@
                                 @if($rs->role == 'pendeta')
                                 
                                 @else
-                                <a href="{{ route('owner.table.edit', $rs->id)}}" type="button" class="btn btn-warning">Edit</a>
+                                <a href="{{ route('owner.table.edit', $rs->id)}}" type="button" class="btn btn-warning">Ubah</a>
                                 @endif
                                 <form action="{{ route('owner.table.destroy', $rs->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Delete?')">
                                     @method('DELETE')
@@ -47,7 +47,7 @@
                                     @if($rs->role == 'owner')
                                 
                                     @else
-                                    <button class="btn btn-danger m-0">Delete</button>
+                                    <button class="btn btn-danger m-0">Hapus</button>
                                     @endif
                                 </form>
                             </div>

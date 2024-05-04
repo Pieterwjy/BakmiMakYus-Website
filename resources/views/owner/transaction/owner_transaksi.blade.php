@@ -30,16 +30,17 @@
         <div class="col">
             <form id="dateForm" action="{{ route('owner.transaction.index') }}" method="GET" class="form-inline">
                 <div class="form-group mr-3">
-                    <label for="start_date" class="mr-2">Start Date:</label>
+                    <label for="start_date" class="mr-2">Dari:</label>
                     <input type="text" class="form-control" id="start_date" name="start_date" value="{{ $startDate }}">
                 </div>
                 <div class="form-group mr-3">
-                    <label for="end_date" class="mr-2">End Date:</label>
+                    <label for="end_date" class="mr-2">Sampai:</label>
                     <input type="text" class="form-control" id="end_date" name="end_date" value="{{ $endDate }}">
                 </div>
-                <button type="submit" class="btn btn-primary">Filter</button>
+                <button type="submit" class="btn btn-primary">Terapkan</button>
             </form>
         </div>
+       
     </div>
     <div class="row mt-4">
         <div class="col">
@@ -64,7 +65,7 @@
                             </ul>
                         </div>
                         <div class="col">
-                            <h3>Jumlah Transaksi Setiap Bulan</h3>
+                            <h3 class="text-center">Jumlah Transaksi Setiap Bulan</h3>
                             <div class="chart-container">
                                 <canvas id="orderChart"></canvas>
                             </div>
@@ -120,9 +121,18 @@
         <div class="container">
             <div class="row mt-4">
                 <div class="col">
+                    
                     <div class="card">
+                        
                         <div class="card-header">
-                            <h3 class="mb-0 text-center">Daftar Transaksi</h3>
+                            <form action="{{ route('owner.generate.report') }}" method="GET" class="float-right">
+                                <input type="hidden" name="start_date" value="{{ $startDate }}">
+                                <input type="hidden" name="end_date" value="{{ $endDate }}">
+                                <button type="submit" class="btn btn-primary">Ekspor Tabel Transaksi</button>
+                            </form>
+                            <h3 class="mb-0 float-center">Daftar Transaksi</h3>
+                            
+                           
                         </div>
                         <div class="card-body">
                             <table class="table">

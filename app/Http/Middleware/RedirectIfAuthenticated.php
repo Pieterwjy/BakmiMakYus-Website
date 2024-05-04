@@ -30,7 +30,6 @@ class RedirectIfAuthenticated
                 } elseif (Auth::user()->role === 'cook') {
                     return redirect()->route('cook.dashboard');
                 }
-                    // Admin Owner Cook
             }
         }
 
@@ -44,7 +43,6 @@ class RedirectIfAuthenticated
                         return redirect()->route('cook.dashboard');
                     }
                 }
-        // Admin Owner Cook
         return $next($request);
     }
 }

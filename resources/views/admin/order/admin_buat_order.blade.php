@@ -39,7 +39,6 @@
                         <label for="cashless">Non Tunai</label>
                     </div>
                     <textarea class="form-control" id="notes" name="notes" rows="2" placeholder="Catatan Khusus"></textarea>
-                
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -58,13 +57,7 @@
       $('#view-cart-btn').on('click', function() {
         // Trigger the cart modal to show
         $('#cartModal').modal('show');
-  
-        // Optionally, you can load cart items dynamically here using AJAX
-        // and update the cart content inside the modal
       });
-
-
-
     });
   </script>
 
@@ -96,7 +89,7 @@
                                 <p class="card-text">{{ $item->product_description }}</p>
                             </div>
                             <div class="card-footer d-flex justify-content-between align-items-center">
-                                <p class="mb-0">Harga: Rp.{{ $item->product_price }}</p>
+                                <p class="mb-0">Harga: Rp.{{ number_format($item->product_price, 0, ',', '.') }}</p>
                                 <button class="btn btn-primary btn-sm" onclick="addToCart('{{ $item->id }}', '{{ $item->product_name }}', '{{ $item->product_price }}')"><i class="fas fa-shopping-cart"></i> +</button>
                             </div>
                         </div>
@@ -190,43 +183,7 @@ input[type="number"] {
     }
 </style>
 
-
-
-{{-- <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{env('MIDTRANS_CLIENT_KEY')}}"></script>
-    <script type="text/javascript">
-      // Function to handle payment initiation when the checkout button is clicked
-      document.getElementById('checkout-form').addEventListener('submit', function(event) {
-        // Prevent the default form submission behavior
-        event.preventDefault();
-
-        // Execute payment initiation logic using Snap
-        snap.pay('<?=$snapToken?>', {
-          // Optional: Callback functions for different payment outcomes
-          onSuccess: function(result) {
-            // Handle successful payment
-            // You may redirect the user to a success page or display a success message
-            // Example: window.location.href = "<Your success page URL>";
-          },
-          onPending: function(result) {
-            // Handle pending payment
-            // This callback is triggered when the payment is pending or waiting for approval
-            // Example: display a message to the user indicating that the payment is pending
-          },
-          onError: function(result) {
-            // Handle payment error
-            // This callback is triggered when an error occurs during payment processing
-            // Example: display an error message to the user
-          }
-        });
-      });
-    </script> --}}
-
-
-
 <script>
-
-
-
 document.addEventListener('DOMContentLoaded', function () {
     const navItems = document.querySelectorAll('.custom-nav-item');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -278,22 +235,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let grandTotal = subtotal;
     return grandTotal;
 }
-
-    // function addTableNumberToCart(tableNumber) {
-    //     // Get the cart data from local storage
-    //     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    //     // Check if the table number is already in the cart
-    //     let existingTableIndex = cart.findIndex(item => item.type === 'table' && item.number === tableNumber);
-
-    //     // If the table number is not in the cart, add it
-    //     if (existingTableIndex === -1) {
-    //         cart.push({ type: 'table', number: tableNumber });
-    //     }
-
-    //     // Update the cart data in local storage
-    //     localStorage.setItem('cart', JSON.stringify(cart));
-    // }
 
     function addToCart(id, name, price) {
     // Check if cart exists in local storage
@@ -350,12 +291,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let table = document.createElement('table');
     table.classList.add('table');
     let headerRow = table.insertRow();
-    // ['ID', 'Menu', 'Harga', 'Qty.', 'Harga', 'Action'].forEach(headerText => {
-    //     let header = document.createElement('th');
-    //     header.textContent = headerText;
-    //     headerRow.appendChild(header);
-    // });
-    ['Menu', 'Harga', 'Qty.', 'Sub Total', 'Action'].forEach(headerText => {
+
+    ['Menu', 'Harga', 'Qty.', 'Sub Total', 'Pilihan'].forEach(headerText => {
         let header = document.createElement('th');
         header.textContent = headerText;
         headerRow.appendChild(header);
@@ -365,9 +302,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     cart.forEach((item, index) => {
         let row = table.insertRow();
-        // row.insertCell().textContent = item.id;
         row.insertCell().textContent = item.name;
-        row.insertCell().textContent = 'Rp.' + item.price;
+        row.insertCell().textContent = 'Rp.' + item.price.toLocaleString('id-ID');
         let quantityCell = row.insertCell();
         let quantityInput = document.createElement('input');
         quantityInput.type = 'number';
@@ -378,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function () {
             changeQuantity(index, delta);
         });
         quantityCell.appendChild(quantityInput);
-        row.insertCell().textContent = 'Rp.' +item.price * item.quantity;
+        row.insertCell().textContent = 'Rp.' +(item.price * item.quantity).toLocaleString('id-ID');
         let actionsCell = row.insertCell();
         let removeButton = document.createElement('button');
         removeButton.textContent = 'Hapus';
@@ -392,18 +328,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Display grand total inside the grand total container
     let grandTotalContainer = document.getElementById('grandTotalLabel');
-    grandTotalContainer.textContent = 'Grand Total: Rp.' + grandTotal.toFixed(2); // Display grand total with two decimal places
+    grandTotalContainer.textContent = 'Total Harga: Rp.' + grandTotal.toLocaleString('id-ID'); // Display grand total with two decimal places
 
     document.getElementById("gross_amount").value = grandTotal;
     cartContainer.appendChild(table);
 }
 
-
     function updateCartDataBeforeSubmit() {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         document.getElementById('cartData').value = JSON.stringify(cart);
     }
-
 
         function toggleCheckoutButton() {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -417,8 +351,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Call the displayCart function when the page loads
      window.addEventListener('DOMContentLoaded', function() {
-        // let tableNumber = getTableNumberFromURL();
-        // addTableNumberToCart(tableNumber);
         toggleCheckoutButton()
         // Display the cart after adding the table number
         displayCart();
@@ -431,8 +363,5 @@ document.addEventListener('DOMContentLoaded', function () {
     // localStorage.removeItem('cart');
 });
 
-
 </script>
-
-
 @endsection

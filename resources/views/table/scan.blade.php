@@ -114,7 +114,7 @@
                                 <p class="card-text">{{ $item->product_description }}</p>
                             </div>
                             <div class="card-footer d-flex justify-content-between align-items-center">
-                                <p class="mb-0">Harga: Rp.{{ $item->product_price }}</p>
+                                <p class="mb-0">Harga: Rp.{{ number_format($item->product_price, 0, ',', '.') }}</p>
                                 <button class="btn btn-primary btn-sm" onclick="addToCart('{{ $item->id }}', '{{ $item->product_name }}', '{{ $item->product_price }}')"><i class="fas fa-shopping-cart"></i> +</button>
                             </div>
                         </div>
@@ -373,7 +373,7 @@ input[type="number"] {
     //     header.textContent = headerText;
     //     headerRow.appendChild(header);
     // });
-    ['Menu', 'Harga', 'Qty.', 'Sub Total', 'Action'].forEach(headerText => {
+    ['Menu', 'Harga', 'Qty.', 'Sub Total', 'Pilihan'].forEach(headerText => {
         let header = document.createElement('th');
         header.textContent = headerText;
         headerRow.appendChild(header);
@@ -385,7 +385,7 @@ input[type="number"] {
         let row = table.insertRow();
         // row.insertCell().textContent = item.id;
         row.insertCell().textContent = item.name;
-        row.insertCell().textContent = 'Rp.' + item.price;
+        row.insertCell().textContent = 'Rp.' + item.price.toLocaleString('id-ID');
         let quantityCell = row.insertCell();
         let quantityInput = document.createElement('input');
         quantityInput.type = 'number';
@@ -396,7 +396,7 @@ input[type="number"] {
             changeQuantity(index, delta);
         });
         quantityCell.appendChild(quantityInput);
-        row.insertCell().textContent = 'Rp.' +item.price * item.quantity;
+        row.insertCell().textContent = 'Rp.' +(item.price * item.quantity).toLocaleString('id-ID');
         let actionsCell = row.insertCell();
         let removeButton = document.createElement('button');
         removeButton.textContent = 'Hapus';
@@ -410,7 +410,7 @@ input[type="number"] {
 
     // Display grand total inside the grand total container
     let grandTotalContainer = document.getElementById('grandTotalLabel');
-    grandTotalContainer.textContent = 'Grand Total: Rp.' + grandTotal.toFixed(2); // Display grand total with two decimal places
+    grandTotalContainer.textContent = 'Total Harga: Rp.' + grandTotal.toLocaleString('id-ID'); // Display grand total with two decimal places
 
     document.getElementById("gross_amount").value = grandTotal;
     cartContainer.appendChild(table);

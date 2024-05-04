@@ -55,15 +55,6 @@ class AdminProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $validatedData = $request->validate([
-        //     'product_name' => 'required|max:255',
-        //     'product_price' => 'required',
-        //     'product_description' => 'required',
-        //     'product_category' => 'required',
-        //     'product_status' => 'required',
-        //     'images' => 'mimes:jpeg,png'
-        // ]);
-
         $validatedData = $request->validate([
             'product_status' => 'required'
         ]);
@@ -74,10 +65,7 @@ class AdminProductController extends Controller
             }
             $validatedData['images'] = $request->file('images')->store('menu-images');
         }
-
-        // Post::where('id',$id)->update($request->only(['title','body']));
         Product::where('id',$id)->update($validatedData);
- 
         return redirect()->route('admin.product.index')->with('success', 'Menu berhasil diperbaharui');
     }
 

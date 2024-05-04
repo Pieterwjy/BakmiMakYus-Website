@@ -16,15 +16,11 @@ class TableController extends Controller
     public function scan($tableNumber)
     {
         $table = Table::where('table_number', $tableNumber)->first();
-        // $table = Table::find($tableNumber);
-    
         if (! $table) {
             // Redirect back with an error message if the table is not found
             return redirect()->back()->with('error', 'Table not found');
         }
-    
         $menu = Product::all();
-    
         return view('table.scan', compact('table', 'menu'));
     }
 
@@ -42,9 +38,8 @@ class TableController extends Controller
      */
     public function create()
     {
-        // Retrieve the maximum table number
+    // Retrieve the maximum table number
     $lastTableNumber = Table::max('table_number');
-
     // Increment the last table number by 1 to get the next available table number
     $nextTableNumber = $lastTableNumber + 1;
 
@@ -67,7 +62,6 @@ class TableController extends Controller
         ]);
         Table::create($validatedData);
         QrCode::format('png')->size(200)->generate(route('table.scan', $request->table_number), public_path($qrCodePath));
-        
         return redirect()->route('owner.table.index')->with('success', 'Meja berhasil dibuat');
 
     }
@@ -95,10 +89,8 @@ class TableController extends Controller
     public function update(Request $request, $id)
     {
         $table = Table::where('id',$id)->first();
-
         $table_number = $request->table_number;
         $qrCodePath = 'qr_codes/table_' . $table_number . '.png';
-
         $request->merge(['table_qr' => $qrCodePath]);
         if($table->table_number == $request->table_number) {
             $validatedData = $request->validate([
@@ -113,30 +105,9 @@ class TableController extends Controller
                 'table_qr' => 'required'
             ]);
         }
-        // $validatedData = $request->validate([
-        //     'table_number' => 'required|max:255|unique:tables,table_number'.$table->table_number,
-        //     'table_capacity' => 'required',
-        //     'table_qr' => 'required'
-        // ]);
-
-        // $validatedData = $request->validate([
-        //     'table_number' => 'required|max:255',
-        //     'table_capacity' => 'required',
-        //     'table_qr' => 'required'
-        // ]);
-
-        // if($request->file('image')){
-        //     if($request->oldImage){
-        //         Storage::delete($request->oldImage);
-        //     }
-        //     $validatedData['image'] = $request->file('image')->store('post-images');
-        // }
-
         Table::where('id',$id)->update($validatedData);
-
          // Generate the QR code for the updated table
-    
-    QrCode::format('png')->size(200)->generate(route('table.scan', $request->table_number), public_path($qrCodePath));
+        QrCode::format('png')->size(200)->generate(route('table.scan', $request->table_number), public_path($qrCodePath));
  
         return redirect()->route('owner.table.index')->with('success', 'Meja berhasil diperbaharui');
     }
@@ -154,8 +125,6 @@ class TableController extends Controller
             }
         }
         $table->delete();
- 
-        // return redirect()->route('product.index')->with('success', 'product deleted successfully');
         return redirect()->route('owner.table.index')->with('success', 'Meja berhasil dihapus');
     }
 }

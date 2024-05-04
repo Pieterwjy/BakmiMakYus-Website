@@ -42,7 +42,6 @@ class OwnerAccountController extends Controller
             'role' => 'required|in:owner,admin,cook', 
         ]);
         User::create($validatedData);
- 
         return redirect()->route('owner.akun.index')->with('success', 'Akun berhasil dibuat');
     }
 
@@ -53,8 +52,6 @@ class OwnerAccountController extends Controller
 
     public function show(String $id)
     {
-        // $account = Account::findOrFail($account->id);
-        
         return view('owner.akun.show_akun', ['account' => User::where('id',$id)->first()])->with('title','Lihat Akun');
     }
     
@@ -63,11 +60,9 @@ class OwnerAccountController extends Controller
      */
     public function edit(String $id)
     {
-        // $account = Account::findOrFail($account->id);
- 
-        return view('owner.akun.edit_akun', ['account' => User::where('id',$id)->first()])->with('title','Edit Akun');
-    }
 
+        return view('owner.akun.edit_akun', ['account' => User::where('id',$id)->first()])->with('title','Ubah Akun');
+    }
 
     /**
      * Update the specified resource in storage.
@@ -98,10 +93,7 @@ class OwnerAccountController extends Controller
     public function destroy(User $akun)
     {
         $account = User::findOrFail($akun->id);
-        
         $account->delete();
- 
-        // return redirect()->route('product.index')->with('success', 'product deleted successfully');
         return redirect()->route('owner.akun.index')->with('success', 'Akun berhasil dihapus');
     }
 

@@ -41,17 +41,17 @@
             var col = $('<div class="col"></div>'); // Adjusted column class
             var card = $('<div class="card h-100 shadow"></div>'); // Added shadow for depth effect
             var cardHeader = $('<div class="card-header bg-primary text-white text-center"></div>'); // Added header
-            cardHeader.text('Order #' + order.id); // Display order ID in header
+            cardHeader.text('Pesanan #' + order.id); // Display order ID in header
             var cardBody = $('<div class="card-body d-flex flex-column"></div>'); // Added flex for content alignment
 
             var cardText = '';
-            if (order.order_type) {cardText += '<p class="card-text mb-2"><strong>Order Type:</strong> ' + order.order_type + '</p>';}
-            if (order.notes) {cardText += '<p class="card-text mb-2"><strong>Notes:</strong> ' + order.notes + '</p>';}
+            if (order.order_type) {cardText += '<p class="card-text mb-2"><strong>Jenis Pesanan:</strong> ' + order.order_type + '</p>';}
+            if (order.notes) {cardText += '<p class="card-text mb-2"><strong>Catatan:</strong> ' + order.notes + '</p>';}
             var ul = $('<ul class="list-group mb-3"></ul>');
 
             order.details.forEach(function(detail) {
                 var li = $('<li class="list-group-item d-flex justify-content-between align-items-center"></li>'); // Adjusted list item layout
-                li.html('<span><strong>' + detail.product_name + '</strong></span><span class="badge bg-secondary rounded-pill">Quantity: ' + detail.order_qty + '</span>'); // Added badge for quantity
+                li.html('<span><strong>' + detail.product_name + '</strong></span><span class="badge bg-secondary rounded-pill">Jumlah: ' + detail.order_qty + '</span>'); // Added badge for quantity
                 ul.append(li);
             });
 

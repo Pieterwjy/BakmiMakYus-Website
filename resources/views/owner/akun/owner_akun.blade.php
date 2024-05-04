@@ -22,7 +22,7 @@
                 <th>Email</th>
                 <th>Handphone</th>
                 <th>Hak Akses</th>
-                <th>Action</th>
+                <th>Pilihan</th>
             </tr>
         </thead>
         <tbody>
@@ -40,15 +40,15 @@
                                 @if($rs->role == 'pendeta')
                                 
                                 @else
-                                <a href="{{ route('owner.akun.edit', $rs->id)}}" type="button" class="btn btn-warning">Edit</a>
+                                <a href="{{ route('owner.akun.edit', $rs->id)}}" type="button" class="btn btn-warning">Ubah</a>
                                 @endif
-                                <form action="{{ route('owner.akun.destroy', $rs->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Delete?')">
+                                <form action="{{ route('owner.akun.destroy', $rs->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Apakah Anda Ingin Menghapus Akun Ini?')">
                                     @method('DELETE')
                                     @csrf
                                     @if($rs->role == 'owner')
                                 
                                     @else
-                                    <button class="btn btn-danger m-0">Delete</button>
+                                    <button class="btn btn-danger m-0">Hapus</button>
                                     @endif
                                 </form>
                             </div>

@@ -11,13 +11,11 @@ class CookController extends Controller
 
     public function fetch()
     {
-
         $orders = Order::whereIn('order_status',['Diteruskan Ke Koki'])
         ->get();
         $order_details = OrderDetail::all();
 
         $data = [];
-
         foreach ($orders as $order) {
             $orderData = [
                 'id' => $order->id,
@@ -31,17 +29,14 @@ class CookController extends Controller
             $details = $order_details->where('order_id', $order->id);
     
             foreach ($details as $detail) {
-                $orderData['details'][] = [
+                    $orderData['details'][] = [
                     'product_name' => $detail->product_name,
                     'product_price' => $detail->product_price,
                     'order_qty' => $detail->order_qty,
-                    // Add other detail fields here as needed
                 ];
             }
-    
             $data[] = $orderData;
         }
-    
         // Return data as JSON response
         return response()->json($data);
     }
@@ -106,11 +101,8 @@ class CookController extends Controller
     public function CookLogout(Request $request)
     {
         Auth::guard('web')->logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
-
         return redirect('/');
     }
 }

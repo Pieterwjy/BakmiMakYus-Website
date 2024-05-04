@@ -1,6 +1,6 @@
 <nav class="navbar sticky-top navbar-expand-lg bg-light py-3">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ route('home') }}">
+      <a class="navbar-brand">
         <img src="{{ asset('logo/logo.png') }}" width="60" height="60" alt="Logo">
         Bakmi MakYus - Pemesanan
       </a>

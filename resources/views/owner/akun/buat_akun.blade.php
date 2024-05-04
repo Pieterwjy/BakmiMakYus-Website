@@ -14,7 +14,7 @@
     <form action="{{ route('owner.akun.store') }}" method="POST">
         @csrf
         <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Name</span>
+            <span class="input-group-text" id="basic-addon1">Nama</span>
             <input type="text" name="name"  class="form-control" placeholder="Nama" aria-label="Name" aria-describedby="basic-addon1" required>
         </div>
         <div class="input-group mb-3">
@@ -22,7 +22,7 @@
             <input type="email" name="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" required>
         </div>
         <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Phone</span>
+            <span class="input-group-text" id="basic-addon1">No. Telp</span>
             <input type="tel" name="phone" class="form-control" placeholder="Phone" aria-label="Phone" aria-describedby="basic-addon1" required>
         </div>
             <div class="input-group mb-3">
@@ -35,12 +35,12 @@
                 </select>
             </div>
             <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">Password</span>
+                <span class="input-group-text" id="basic-addon1">Kata Sandi</span>
                 <input type="password" name="password" class="form-control" placeholder="password" aria-label="Password" aria-describedby="basic-addon1" required>
             </div>
             <div class="row">
                 <div class="d-grid">
-                    <button class="btn btn-primary">Submit</button>
+                    <button class="btn btn-primary">Buat Akun</button>
                 </div>
             </div>
         </div>

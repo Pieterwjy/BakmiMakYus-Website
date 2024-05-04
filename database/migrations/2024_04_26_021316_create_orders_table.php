@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('snap_token')->nullable();
             $table->timestamps();
         });
+
     }
 
     /**
