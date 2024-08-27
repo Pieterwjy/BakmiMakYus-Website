@@ -28,16 +28,6 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"  />
 
-@if($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <center><h5>{{ $error }}</h5></center>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
 
 <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Added modal-lg class for large modal -->
@@ -137,39 +127,17 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // document.getElementById('orderForm').addEventListener('submit', function(event) {
-        //     // Get values from inputs
-        //     var customerName = document.getElementById('customerName').value.trim();
-        //     var notes = document.getElementById('notes').value.trim();
-
-        //     // Merge values into notes textarea
-        //     var mergedNotes = "a.n. " + customerName + ", \n" + notes;
-
-        //     // Update textarea value
-        //     document.getElementById('notes').value = mergedNotes;
-        // });
-
-          // Retrieve stored values from local storage on page load
-        if (localStorage.getItem('customerName')) {
-            document.getElementById('customerName').value = localStorage.getItem('customerName');
-        }
-        if (localStorage.getItem('notes')) {
-            document.getElementById('notes').value = localStorage.getItem('notes');
-        }
-
-        // Store values in local storage before submitting the form
-        document.getElementById('orderForm').addEventListener('submit', function() {
+        document.getElementById('orderForm').addEventListener('submit', function(event) {
+            // Get values from inputs
             var customerName = document.getElementById('customerName').value.trim();
             var notes = document.getElementById('notes').value.trim();
 
+            // Merge values into notes textarea
             var mergedNotes = "a.n. " + customerName + ", \n" + notes;
 
+            // Update textarea value
             document.getElementById('notes').value = mergedNotes;
-
-            localStorage.setItem('customerName', customerName);
-            localStorage.setItem('notes', notes);
         });
-
     });
 </script>
 
@@ -204,26 +172,6 @@ document.querySelector('form').addEventListener('submit', function(event) {
 
     let cartData = document.getElementById('cartData').value;
 
-    // Update your existing JavaScript code where you handle adding items to the cart
-// Add this check before allowing the user to add items
-$.ajax({
-    url: "{{ route('order.store', ['table' => $table->table_number]) }}",
-    type: "POST",
-    data: {
-        _token: "{{ csrf_token() }}",
-        cart: cartData
-    },
-    success: function(response) {
-        if (response.status === 'success') {
-            // Proceed with adding items to cart
-            document.querySelector('form').submit();
-        } else {
-            // Display error message or prevent further action
-            alert('Error: ' + response.error); // Example handling, adjust as per your UI/UX needs
-        }
-    }
-});
-
     // Perform AJAX request to check stock
     $.ajax({
         url: "{{ route('check.stock') }}",
@@ -248,7 +196,7 @@ $.ajax({
             }
         },
         error: function(xhr, status, error) {
-            alert('An error occurred while checking stock. Please reload page again.');
+            alert('An error occurred while checking stock. Please try again.');
         }
     });
 });
@@ -276,44 +224,11 @@ $.ajax({
 
      // Lightbox functions
      function showLightbox(imageUrl) {
-    var lightbox = document.getElementById('lightbox');
-    var lightboxImage = document.getElementById('lightboxImage');
-
-    // Set the image src
-    lightboxImage.src = imageUrl;
-
-    // Calculate maximum dimensions for the lightbox image
-    var maxWidth = window.innerWidth * 0.8; // 80% of the viewport width
-    var maxHeight = window.innerHeight * 0.8; // 80% of the viewport height
-
-    // Get the original dimensions of the image
-    var img = new Image();
-    img.onload = function() {
-        var width = img.width;
-        var height = img.height;
-
-        // Calculate scaled dimensions while maintaining aspect ratio
-        var scaleFactor = Math.min(maxWidth / width, maxHeight / height);
-        var scaledWidth = width * scaleFactor;
-        var scaledHeight = height * scaleFactor;
-
-        // Apply scaled dimensions to the image
-        lightboxImage.style.width = scaledWidth + 'px';
-        lightboxImage.style.height = scaledHeight + 'px';
-
-        // Display the lightbox
+        var lightbox = document.getElementById('lightbox');
+        var lightboxImage = document.getElementById('lightboxImage');
+        lightboxImage.src = imageUrl;
         lightbox.style.display = 'block';
-    };
-    img.src = imageUrl;
-
-    // Close lightbox when clicking outside the image
-    lightbox.addEventListener('click', function(event) {
-        if (event.target === lightbox) {
-            closeLightbox();
-        }
-    });
-}
-
+    }
 
     function closeLightbox() {
         var lightbox = document.getElementById('lightbox');
@@ -353,7 +268,7 @@ $.ajax({
                             </div>
                             <div class="card-footer d-flex justify-content-between align-items-center">
                                 <p class="mb-0">Harga: Rp.{{ number_format($item->product_price, 0, ',', '.') }}</p>
-                                <button class="btn btn-danger btn-sm" onclick="addToCart('{{ $item->id }}', '{{ $item->product_name }}', '{{ $item->product_price }}', '{{ $item->product_stock }}')"><i class="fas fa-shopping-cart"></i> +</button>
+                                <button class="btn btn-danger btn-sm" onclick="addToCart('{{ $item->id }}', '{{ $item->product_name }}', '{{ $item->product_price }}')"><i class="fas fa-shopping-cart"></i> +</button>
                             </div>
                         </div>
                     </div>
@@ -400,14 +315,13 @@ $.ajax({
 
 .custom-button {
     display: block;
-    margin: 2px auto 0;
-    margin-bottom: 15px auto 0;
+    margin: 20px auto 0;
     text-align: center;
     padding: 5px 10px;
-    background-color: red;
+    background-color: white;
     color: black;
     border: none;
-    border-radius: 12px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
@@ -602,31 +516,38 @@ input[type="number"] {
     //     localStorage.setItem('cart', JSON.stringify(cart));
     // }
 
-    function addToCart(id, name, price, available_stock) {
+    function addToCart(id, name, price) {
+    // Check if cart exists in local storage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+    // Check if item is already in cart
     let existingItemIndex = cart.findIndex(item => item.id === id);
     if (existingItemIndex !== -1) {
+        // Increment quantity if item is already in cart
         cart[existingItemIndex].quantity++;
     } else {
-        cart.push({ id: id, name: name, price: price, quantity: 1, available_stock: available_stock });
+        // Add item to cart with quantity 1
+        cart.push({ id: id, name: name, price: price, quantity: 1 });
     }
 
+    // Update cart in local storage
     localStorage.setItem('cart', JSON.stringify(cart));
 
+    // Update cart view
     displayCart();
     toggleCheckoutButton();
 
+    // Optionally, you can provide feedback to the user
     const alertMsg = 'Menu Di Tambah Kedalam Keranjang!';
     alert(alertMsg);
     setTimeout(() => {
+        // Close the alert after 2 seconds
         let alertElement = document.querySelector('.alert');
         if (alertElement) {
             alertElement.classList.add('hide');
         }
     }, 2000);
 }
-
 
     // Function to display cart
     function changeQuantity(index, delta) {
@@ -699,12 +620,14 @@ input[type="number"] {
 // }
 
 function displayCart() {
+    // Get cart data from local storage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let cartContainer = document.getElementById('cart');
     cartContainer.innerHTML = '';
 
+    // Create and populate the cart table
     let table = document.createElement('table');
-    table.classList.add('table', 'table-responsive');
+    table.classList.add('table', 'table-responsive'); // Added 'table-responsive' class for responsiveness
     let headerRow = table.insertRow();
     ['Menu', 'Harga', 'Qty.', 'Pilihan'].forEach(headerText => {
         let header = document.createElement('th');
@@ -712,93 +635,43 @@ function displayCart() {
         headerRow.appendChild(header);
     });
 
-    let grandTotal = 0;
+    let grandTotal = 0; // Initialize grand total variable
 
-    // Function to fetch item details asynchronously
-    async function fetchItemDetails(item) {
-    try {
-        let response = await fetch(`/api/items/${item.id}`);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        let data = await response.json();
-        console.log('API response:', data.item.product_stock); // Log API response for debugging
-        return data.item.product_stock || 0; // Handle undefined case
-    } catch (error) {
-        console.error('Error fetching item details:', error);
-        return 0; // Default to 0 or handle error accordingly
-    }
+    cart.forEach((item, index) => {
+        let row = table.insertRow();
+        row.insertCell().textContent = item.name;
+        let priceCell = row.insertCell();
+        // priceCell.textContent = 'Rp.' + item.price.toLocaleString('id-ID') + '\n (' + 'Rp.' + (item.price * item.quantity).toLocaleString('id-ID') + ')';
+        priceCell.textContent = 'Rp.' + item.price.toLocaleString('id-ID');
+        let quantityCell = row.insertCell();
+        let quantityInput = document.createElement('input');
+        quantityInput.type = 'number';
+        quantityInput.value = item.quantity;
+        quantityInput.min = 1;
+        quantityInput.max = 150;
+        quantityInput.addEventListener('change', function() {
+            let delta = parseInt(quantityInput.value) - item.quantity;
+            changeQuantity(index, delta);
+        });
+        quantityCell.appendChild(quantityInput);
+        let actionsCell = row.insertCell();
+        let removeButton = document.createElement('button');
+        removeButton.textContent = 'Hapus';
+        removeButton.classList.add('btn', 'btn-danger', 'btn-sm');
+        removeButton.addEventListener('click', function() {
+            changeQuantity(index, -item.quantity);
+        });
+        actionsCell.appendChild(removeButton);
+        grandTotal += item.price * item.quantity;
+    });
+
+    // Display grand total inside the grand total container
+    let grandTotalContainer = document.getElementById('grandTotalLabel');
+    grandTotalContainer.textContent = 'Total Harga: Rp.' + grandTotal.toLocaleString('id-ID'); // Display grand total with two decimal places
+
+    document.getElementById("gross_amount").value = grandTotal;
+    cartContainer.appendChild(table);
 }
-
-function formatNumber(number) {
-    // Ensure the number is an integer
-    const intNumber = Math.floor(number);
-    // Use toLocaleString with options to add thousands separator and no decimal places
-    return intNumber.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-}
-    // Async function to display cart items with dynamic max quantity
-    async function displayCartItems() {
-        for (let index = 0; index < cart.length; index++) {
-            let item = cart[index];
-            console.log('Fetching details for item:', item);
-            let availableStock = await fetchItemDetails(item);
-            // console.log('Available stock for item', item.id, ':', await fetchItemDetails(item)); // Log availableStock for debugging
-
-            let row = table.insertRow();
-            row.insertCell().textContent = item.name;
-            row.insertCell().textContent = 'Rp.' + formatNumber(item.price);
-
-            let quantityCell = row.insertCell();
-            let quantityInput = document.createElement('input');
-            quantityInput.type = 'number';
-            quantityInput.value = item.quantity;
-            quantityInput.min = 1;
-            quantityInput.max = availableStock; // Set max to available stock from Ajax
-            // quantityInput.addEventListener('change', function() {
-            //     let delta = parseInt(quantityInput.value) - item.quantity;
-            //     changeQuantity(index, delta);
-            // });
-            let timeout;
-            quantityInput.addEventListener('input', function() {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    let value = parseInt(quantityInput.value);
-                    if (value > availableStock) {
-                        quantityInput.value = availableStock; // Ensure value does not exceed availableStock
-                    } else if (value < 1) {
-                        quantityInput.value = 1; // Ensure value is not less than 1
-                    }
-                    let delta = parseInt(quantityInput.value) - item.quantity;
-                    changeQuantity(index, delta);
-                }, 500); // Delay of 500ms
-            });
-            quantityCell.appendChild(quantityInput);
-
-            // row.insertCell().textContent = 'Rp.' + (item.price * item.quantity).toLocaleString('id-ID');
-
-            let actionsCell = row.insertCell();
-            let removeButton = document.createElement('button');
-            removeButton.textContent = 'Hapus';
-            removeButton.classList.add('btn', 'btn-danger', 'btn-sm');
-            removeButton.addEventListener('click', function() {
-                changeQuantity(index, -item.quantity);
-            });
-            actionsCell.appendChild(removeButton);
-
-            grandTotal += item.price * item.quantity;
-        }
-
-        let grandTotalContainer = document.getElementById('grandTotalLabel');
-        grandTotalContainer.textContent = 'Total Harga: Rp.' + grandTotal.toLocaleString('id-ID');
-
-        document.getElementById("gross_amount").value = grandTotal;
-        cartContainer.appendChild(table);
-    }
-
-    // Call async function to display cart items
-    displayCartItems();
-}
-
 
 
 

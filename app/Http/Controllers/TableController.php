@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Table;
 use App\Models\Product;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreTableRequest;
 use App\Http\Requests\UpdateTableRequest;
@@ -21,7 +22,16 @@ class TableController extends Controller
             return redirect()->back()->with('error', 'Table not found');
         }
         $menu = Product::all();
-        return view('table.scan', compact('table', 'menu'));
+
+            // Select active order where order_status is 'Diteruskan Ke Koki'
+            $activeOrders = Order::where('table_number', $tableNumber)
+            ->where(function ($query) {
+                $query->where('order_status', 'Diteruskan Ke Koki')
+                    ->orWhereIn('status', ['Pending', 'Pending, Payment in Cashier']);
+            })
+            ->get();        
+
+        return view('table.scan', compact('table', 'menu','activeOrders'));
     }
 
     /**
@@ -29,7 +39,13 @@ class TableController extends Controller
      */
     public function index()
     {
-        $tables = Table::all();
+        // $tables = Table::all();
+        // $tables = Table::all()->reject(function ($table) {
+        //     return $table->table_number == 0;
+        // });
+        // $tables = Table::all();
+        $tables = Table::orderBy('table_number', 'asc')->get();
+
         return view('owner.table.owner_meja')->with('tables',$tables)->with('title','Dashboard Meja');
     }
 
@@ -69,10 +85,10 @@ class TableController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Table $table)
-    {
-        //
-    }
+    // public function show(Table $table)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.

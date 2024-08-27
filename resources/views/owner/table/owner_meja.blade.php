@@ -29,18 +29,21 @@
                 @foreach($tables as $rs)
                     <tr>
                         <td class="align-middle">{{ $loop->iteration }}</td>
-                        <td class="align-middle">{{ $rs->table_number }}</td>
+                        <td class="align-middle">
+                            {{ $rs->table_number == 0 ? 'Ambil Di Kasir' : $rs->table_number }}
+                        </td>
+
                         <td class="align-middle">{{ $rs->table_capacity }} Orang</td>
                         {{-- <td class="align-middle">{{ $rs->table_qr }}</td> --}}
                         <td class="align-middle"><img src="{{ asset( $rs->table_qr) }}" alt="QR Code" width="75" height="75"></td>
                         <td class="align-middle">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 
-                                @if($rs->role == 'pendeta')
-                                
+                               @if($rs->table_number == 0)
+                               
                                 @else
                                 <a href="{{ route('owner.table.edit', $rs->id)}}" type="button" class="btn btn-warning">Ubah</a>
-                                @endif
+                                
                                 <form action="{{ route('owner.table.destroy', $rs->id) }}" method="POST" type="button" class="btn btn-danger p-0" onsubmit="return confirm('Delete?')">
                                     @method('DELETE')
                                     @csrf
@@ -50,6 +53,8 @@
                                     <button class="btn btn-danger m-0">Hapus</button>
                                     @endif
                                 </form>
+                                @endif
+                                
                             </div>
                         </td>
                     </tr>
@@ -61,4 +66,7 @@
             @endif
         </tbody>
     </table>
+    <br>
+    <br>
+    <br>
 @endsection

@@ -24,6 +24,7 @@
                 <th>Deskripsi</th>
                 <th>Kategori</th>
                 <th>Status</th>
+                <th>Stok</th>
                 <th>Pilihan</th>
             </tr>
         </thead>
@@ -44,6 +45,7 @@
                         <td class="align-middle">{{ $rs->product_description }}</td>
                         <td class="align-middle">{{ $rs->product_category }}</td>
                         <td class="align-middle">{{ $rs->product_status == 'active' ? 'Tersedia' : 'Tidak Tersedia'}}</td>
+                        <td class="align-middle">{{ $rs->product_stock }}</td>
                         
                         <td class="align-middle">
                             <div class="btn-group" role="group" aria-label="Basic example">

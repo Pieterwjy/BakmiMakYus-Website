@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Order;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class UpdateExpiredOrders extends Command
 {
@@ -27,14 +28,20 @@ class UpdateExpiredOrders extends Command
      */
     public function handle()
     {
-        $expiredOrders = Order::where('status', 'Pending, Payment in Cashier')
+        // $expiredOrders = Order::where('status', 'Pending, Payment in Cashier')
+        // ->where('created_at', '<', Carbon::now()->subMinutes(15))
+        // ->get();
+        $expiredOrders = Order::where(function($query) {
+            $query->where('status', 'Pending, Payment in Cashier')
+                  ->orWhere('status', 'Pending');
+        })
         ->where('created_at', '<', Carbon::now()->subMinutes(15))
         ->get();
 
         foreach ($expiredOrders as $order) {
-            $order->update(['order_status' => 'Expired']);
+            $order->update(['status' => 'Expired']);
         }
-
+        Log::info($expiredOrders);
         $this->info('Expired orders updated successfully.');
     }
 }

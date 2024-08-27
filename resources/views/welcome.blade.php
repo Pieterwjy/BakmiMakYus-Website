@@ -42,15 +42,15 @@
     <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="{{asset('carousel/carousel1.webp')}}" class="d-block w-100" style="object-fit: cover; height: 100%;" alt="...">
+                <img src="{{asset('carousel/carousel1.png')}}" class="d-block w-100" style="object-fit: cover; height: 100%;" alt="...">
                 <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.5);"></div>
             </div>
             <div class="carousel-item">
-                <img src="{{asset('carousel/carousel2.jpg')}}" class="d-block w-100" style="object-fit: cover; height: 100%;" alt="...">
+                <img src="{{asset('carousel/carousel2.png')}}" class="d-block w-100" style="object-fit: cover; height: 100%;" alt="...">
                 <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.5);"></div>
             </div>
             <div class="carousel-item">
-                <img src="{{asset('carousel/carousel3.jpeg')}}" class="d-block w-100" style="object-fit: cover; height: 100%;" alt="...">
+                <img src="{{asset('carousel/carousel3.png')}}" class="d-block w-100" style="object-fit: cover; height: 100%;" alt="...">
                 <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.5);"></div>
             </div>
         </div>
@@ -107,13 +107,19 @@
                 <div class="modal-body">
                     <select class="form-select" id="tableNumber">
                         <option selected disabled>Pilih Nomor Meja</option>
+                        <!-- <?php foreach ($tables as $table): ?> -->
+                        <!-- <option value="<?php echo $table['table_number']; ?>"><?php echo "Meja " . $table['table_number']; ?></option> -->
+                        <!-- <?php endforeach; ?> -->
                         <?php foreach ($tables as $table): ?>
-                        <option value="<?php echo $table['table_number']; ?>"><?php echo "Meja " . $table['table_number']; ?></option>
+                            <option value="<?php echo $table['table_number']; ?>">
+                                <?php echo $table['table_number'] == 0 ? "Ambil Di Kasir" : "Meja " . $table['table_number']; ?>
+                            </option>
                         <?php endforeach; ?>
+
                     </select>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="redirectToScan()">Lanjutkan</button>
+                    <button type="button" class="btn btn-danger" onclick="redirectToScan()">Lanjutkan</button>
                 </div>
             </div>
         </div>

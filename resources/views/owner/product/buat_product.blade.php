@@ -21,7 +21,7 @@
     <div class="mb-3">
       <label for="image" class="form-label">Unggah Gambar</label>
       <img class="img-preview img-fluid mb-3 col-sm-5 rounded" style="max-width: 100px; max-height: 100px;">
-      <input type="file" class="form-control" id="images" name="images" onchange="previewImage()">
+      <input type="file" class="form-control" id="images" name="images" accept="image/jpeg, image/png" onchange="previewImage()">
     </div>
     <div class="mb-3">
         <label for="title" class="form-label">Harga Produk</label>

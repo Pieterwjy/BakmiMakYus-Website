@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('images')->nullable();
             $table->string('product_description');
             $table->string('product_category');
-            $table->string('product_status')->default('active');
+            $table->string('product_status')->default('inactive');
+            $table->integer('product_stock')->default('0');
             $table->timestamps();
         });
     }

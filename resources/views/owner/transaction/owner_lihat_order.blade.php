@@ -1,4 +1,4 @@
-@extends('admin.main')
+@extends('owner.main')
 @section('container')
 
 <div class="order-details">
@@ -29,7 +29,7 @@
     </table>
     <p class="total-amount text-end"><b>Total Harga: Rp.{{ number_format($order->gross_amount, 0, ',', '.') }}</b></p>
     <h4 class="order-details-title">Catatan Pesanan</h3>
-    <p>{{$order->notes}}</p>
+        <p>{{$order->notes}}</p>
 </div>
 <center>
     <h4>
@@ -43,6 +43,7 @@
             {{ $order->status }}
         @endif
     </h4>
+    
     <h8>* Jika ingin kembali ke halaman sebelumnya, klik tombol dibawah ini. </h8><br>
 <button id="back-button" class="btn btn-danger btn-block" style="margin-top: 10px;" onclick="goBackAndRefresh();">Kembali</button>
 </center>

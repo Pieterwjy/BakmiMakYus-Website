@@ -32,11 +32,11 @@
             @endif
 
             
-            <input type="file" class="form-control" id="images" name="images" onchange="previewImage()">
+            <input type="file" class="form-control" id="images" name="images" accept="image/jpeg, image/png" onchange="previewImage()">
         </div>
         <div class="mb-3">
             <label for="title" class="form-label">Harga Produk</label>
-            <input type="text" class="form-control" id="product_price" name="product_price" value="{{ $product->product_price}}"required>
+            <input type="number" class="form-control" id="product_price" name="product_price" value="{{ $product->product_price}}"required min="0" oninput="validateNumberInput(this)">
         </div>
         <div class="mb-3">
             <label for="title" class="form-label">Deskripsi Produk</label>
@@ -55,8 +55,12 @@
             </select>
         </div>
         <div class="mb-3">
+        <label for="title" class="form-label">Stok Produk</label>
+            <input type="number" class="form-control" id="product_stock" name="product_stock" value="{{ $product->product_stock}}" min="0" max="500" required oninput="validateNumberInput(this)">
+        </div>
+        <div class="mb-3">
             <label for="title" class="form-label">Status Produk</label>
-            <select class="form-select" id="product_status" name="product_status" required>
+            <select class="form-select" id="product_status" name="product_status" disabled>
                 <option value="active" {{ $product->product_status === 'active' ? 'selected' : '' }}>Tersedia</option>
                 <option value="inactive" {{ $product->product_status === 'inactive' ? 'selected' : '' }}>Tidak Tersedia</option>
             </select>
@@ -66,18 +70,53 @@
 </div>
 
 <script>
-    function previewImage(){
-        const image = document.querySelector('#images');
-        const imgPreview = document.querySelector('.img-preview');
+      function validateNumberInput(input) {
+    // Remove any non-numeric characters
+    input.value = input.value.replace(/[^0-9]/g, '');
+  }
+    // function previewImage(){
+    //     const image = document.querySelector('#images');
+    //     const imgPreview = document.querySelector('.img-preview');
 
-        imgPreview.style.display = 'block';
+    //     imgPreview.style.display = 'block';
 
-        const oFReader = new FileReader();
-        oFReader.readAsDataURL(image.files[0]);
-        oFReader.onload = function (oFREvent){
-            imgPreview.src = oFREvent.target.result;
-        }
+    //     const oFReader = new FileReader();
+    //     oFReader.readAsDataURL(image.files[0]);
+    //     oFReader.onload = function (oFREvent){
+    //         imgPreview.src = oFREvent.target.result;
+    //     }
+    // }
+    function previewImage() {
+    const fileInput = document.getElementById('images');
+    const preview = document.querySelector('.img-preview');
+    
+    // Reset preview
+    preview.style.display = 'none';
+    preview.src = '';
+
+    // Check if a file is selected
+    if (fileInput.files.length === 0) {
+        return;
     }
+
+    const file = fileInput.files[0];
+
+    // Check if the file type is JPEG or PNG
+    if (file.type === 'image/jpeg' || file.type === 'image/png') {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            preview.style.display = 'block';
+            preview.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    } else {
+        alert('Please upload a JPEG or PNG image.');
+        fileInput.value = ''; // Clear the file input
+    }
+}
+
 </script>
 
 @endsection

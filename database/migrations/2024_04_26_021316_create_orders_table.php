@@ -16,9 +16,10 @@ return new class extends Migration
             $table->integer('table_number');
             $table->string('order_type');
             $table->string('notes')->nullable();
-            $table->string('author')->nullable();
-            $table->float('gross_amount',12,2);
             $table->string('order_status')->nullable();
+            $table->float('gross_amount',12,0);
+            $table->string('cashier')->nullable();
+            $table->string('status')->nullable();
             $table->string('snap_token')->nullable();
             $table->timestamps();
         });

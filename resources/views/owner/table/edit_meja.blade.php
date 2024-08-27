@@ -11,30 +11,35 @@
     </div>
 @endif
     <hr />
-    <form action="{{ route('owner.table.update',$table->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-        <div class="mb-3">
-            <label for="title" class="form-label">No. Meja</label>
-            <input type="number" class="form-control" id="table_number" name="table_number" min="1" value="{{ $table->table_number}}" required>
-        </div>
-        <div class="mb-3">
-            <label for="title" class="form-label">Kapasitas Meja</label>
-            <input type="number" class="form-control" id="table_capacity" name="table_capacity" min="1" value="{{ $table->table_capacity}}" required>
-        </div>
-        
-            <div class="row">
-                <div class="d-grid">
-                    <button class="btn btn-primary">Ubah Meja</button>
-                </div>
-            </div>
-        </div>
-    </form>
+                                    <form action="{{ route('owner.table.update',$table->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="mb-3">
+                                            <label for="title" class="form-label">No. Meja</label>
+                                            <input type="number" class="form-control" id="table_number" name="table_number" min="1" value="{{ $table->table_number}}" required oninput="validateNumberInput(this)">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="title" class="form-label">Kapasitas Meja</label>
+                                            <input type="number" class="form-control" id="table_capacity" name="table_capacity" min="1" value="{{ $table->table_capacity}}" required oninput="validateNumberInput(this)">
+                                        </div>
+                                        
+                                            <div class="row">
+                                                <div class="d-grid">
+                                                    <button class="btn btn-primary">Ubah Meja</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
     
     <br>
     <br>
     <br>
     <br>
     </div>
- 
+    <script>
+  function validateNumberInput(input) {
+    // Remove any non-numeric characters
+    input.value = input.value.replace(/[^0-9]/g, '');
+  }
+</script>
 @endsection

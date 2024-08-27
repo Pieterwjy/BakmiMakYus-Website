@@ -31,17 +31,22 @@ use App\Models\Table;
 //Midtrans Notification Handler
 Route::post('/notification-handler', [NotificationController::class, 'handleNotification']);
 
+
+
 //Customer Route
 Route::get('/', function () {
-    $tables = Table::all();
+    // $tables = Table::all();
+    $tables = Table::orderBy('table_number', 'asc')->get();
     return view('welcome', ['tables' => $tables]);
 })->name('home');
 Route::get('/scan/{table}', [TableController::class, 'scan'])->name('table.scan');
 Route::post('/scan/{table}/order', [OrderController::class, 'store'])->name('order.store');
 Route::get('/checkout/{orderId}', [OrderController::class, 'checkout'])->name('order.checkout');
+Route::post('/checkout/cancel', [OrderController::class, 'checkoutCancel'])->name('checkout.cancel');
 Route::get('/check-payment-status/{orderId}', [OrderController::class, 'checkPaymentStatus'])->name('check.payment.status');
 Route::post('/update-order-status', [OrderController::class, 'updateOrderStatus'])->name('update.order.status');
 Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+Route::post('/check-stock', [OrderController::class, 'checkStock'])->name('check.stock');
 
 //Default Laravel Breeze
 Route::get('/dashboard', function () {
@@ -72,11 +77,12 @@ Route::middleware(['auth','role:admin'])->group(function(){
     Route::get('/admin', function() {
         return view('admin.admin_dashboard',['title' => 'Admin Dashboard'],[AdminController::class, 'AdminDashboard']);
     })->name('admin.dashboard');;
-    Route::get('/admin/logout', [AdminController::class, 'AdminLogout'])->name('admin.logout');;
+    Route::get('/admin/logout', [AdminController::class, 'AdminLogout'])->name('admin.logout');
+    Route::put('/admin/order-pay/{id}', [AdminOrderController::class, 'pay'])->name('admin.order.pay');
+    Route::put('/admin/order-cancel/{id}', [AdminOrderController::class, 'cancel'])->name('admin.order.cancel');
+    Route::put('/admin/order-payredirect/{id}', [AdminOrderController::class, 'payAndRedirect'])->name('admin.order.payandredirect');
+    Route::put('/admin/order-complete/{id}', [AdminOrderController::class, 'complete'])->name('admin.order.complete');
     Route::get('/admin/order/fetch', [AdminOrderController::class, 'fetch'])->name('admin.order.fetch');
-    Route::put('/admin/order/{id}/complete', [AdminOrderController::class, 'complete'])->name('admin.order.complete');
-    Route::put('/admin/order/{id}/pay', [AdminOrderController::class, 'pay'])->name('admin.order.pay');
-    Route::put('/admin/order/{id}/payredirect', [AdminOrderController::class, 'payAndRedirect'])->name('admin.order.payandredirect');
     Route::get('/admin/payment/success', [PaymentController::class, 'adminSuccess'])->name('admin.payment.success');
     Route::get('/admin/order/history', [AdminOrderController::class, 'history'])->name('admin.order.history');
     Route::get('/admin/order/checkout/{orderId}', [AdminOrderController::class, 'checkout'])->name('admin.order.checkout');

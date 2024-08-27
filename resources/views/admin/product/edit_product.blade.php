@@ -55,8 +55,12 @@
             </select>
         </div>
         <div class="mb-3">
+        <label for="title" class="form-label">Stok Produk</label>
+            <input type="number" class="form-control" id="product_stock" name="product_stock" value="{{ $product->product_stock}}" min="0" max="500" required oninput="validateNumberInput(this)">
+        </div>
+        <div class="mb-3">
             <label for="title" class="form-label">Status Produk</label>
-            <select class="form-select" id="product_status" name="product_status" required>
+            <select class="form-select" id="product_status" name="product_status" disabled>
                 <option value="active" {{ $product->product_status === 'active' ? 'selected' : '' }}>Tersedia</option>
                 <option value="inactive" {{ $product->product_status === 'inactive' ? 'selected' : '' }}>Tidak Tersedia</option>
             </select>
@@ -66,6 +70,10 @@
 </div>
 
 <script>
+      function validateNumberInput(input) {
+    // Remove any non-numeric characters
+    input.value = input.value.replace(/[^0-9]/g, '');
+  }
     function previewImage(){
         const image = document.querySelector('#images');
         const imgPreview = document.querySelector('.img-preview');

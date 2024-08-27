@@ -36,7 +36,9 @@
                     <tr>
                         <td class="align-middle">{{ $loop->iteration }}</td>
                         <td class="align-middle">{{ $rs->id }}</td>
-                        <td class="align-middle">{{ $rs->table_number }}</td>
+                        <td class="align-middle">
+                        {{ $rs->table_number == 0 ? 'Ambil Di Kasir' : $rs->table_number }}
+                        </td>
                         <td class="align-middle">{{ $rs->order_type }}</td>
                         <td class="align-middle">{{ $rs->notes }}</td>
                         <td class="align-middle">{{ $rs->order_status }}</td>

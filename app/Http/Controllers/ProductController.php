@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -45,7 +46,6 @@ class ProductController extends Controller
             'product_category' => 'required',
             'images' => 'mimes:jpeg,png'
         ]);
- 
         if($request->file('images')){
             $validatedData['images'] = $request->file('images')->store('menu-images');
         }
@@ -56,10 +56,10 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
-    {
-        //
-    }
+    // public function show(Product $product)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -79,8 +79,9 @@ class ProductController extends Controller
             'product_price' => 'required',
             'product_description' => 'required',
             'product_category' => 'required',
-            'product_status' => 'required',
-            'images' => 'mimes:jpeg,png'
+            'product_status',
+            'images' => 'mimes:jpeg,png',
+            'product_stock' => 'required'
         ]);
 
         if($request->file('images')){
@@ -88,6 +89,7 @@ class ProductController extends Controller
                 Storage::delete($request->oldImage);
             }
             $validatedData['images'] = $request->file('images')->store('menu-images');
+            Log::info('New image stored:', ['path' => $validatedData['images']]);
         }
 
         Product::where('id',$id)->update($validatedData);
@@ -105,5 +107,16 @@ class ProductController extends Controller
         }
         $product->delete();
         return redirect()->route('owner.product.index')->with('success', 'Menu berhasil dihapus');
+    }
+
+    public function checkStock($id)
+    {
+        // Fetch the item details from the database
+        $item = Product::findOrFail($id); // Assuming your item model is named Item
+
+        return response()->json([
+            'status' => 'success',
+            'item' => $item
+        ]);
     }
 }
